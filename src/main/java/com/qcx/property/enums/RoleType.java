@@ -9,9 +9,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RoleType {
+    ADMIN(0, "admin", "管理员"),
     USER(1, "user", "普通用户"),
-    ADMIN(2, "admin", "管理员"),
-    OTHER(3, "other", "其他")
+    OTHER(2, "other", "其他")
     ;
 
     private final int roleId;
