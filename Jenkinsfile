@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GIT_URL = 'git@github.com:yannqing/java-backend-template.git'
+        GIT_URL = 'git@github.com:yannqing/property-management.git'
         APP_NAME = 'propertymanagement'
         APP_PROFILE = 'prod'
         APP_IMAGE = 'propertymanagement:latest'
