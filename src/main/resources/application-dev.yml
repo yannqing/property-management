@@ -4,7 +4,7 @@ spring:
   datasource:
     # mysql
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.22.0.11:3306/template
+    url: jdbc:mysql://172.22.0.11:3306/property-management
     username: root
     password: wyjh030208..
   # 文件上传
