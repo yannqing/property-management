@@ -1,14 +1,14 @@
-//package com.yannqing.template.user;
+//package com.qcx.property.user;
 //
 //import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-//import com.yannqing.template.domain.dto.permissions.AddPermissionDto;
-//import com.yannqing.template.domain.dto.permissions.QueryPermissionsDto;
-//import com.yannqing.template.domain.dto.role.QueryRoleDto;
-//import com.yannqing.template.domain.entity.Permissions;
-//import com.yannqing.template.domain.entity.Role;
-//import com.yannqing.template.service.PermissionsService;
-//import com.yannqing.template.service.RoleService;
-//import com.yannqing.template.service.UserService;
+//import com.qcx.property.domain.dto.permissions.AddPermissionDto;
+//import com.qcx.property.domain.dto.permissions.QueryPermissionsDto;
+//import com.qcx.property.domain.dto.role.QueryRoleDto;
+//import com.qcx.property.domain.entity.Permissions;
+//import com.qcx.property.domain.entity.Role;
+//import com.qcx.property.service.PermissionsService;
+//import com.qcx.property.service.RoleService;
+//import com.qcx.property.service.UserService;
 //import jakarta.annotation.Resource;
 //import lombok.extern.slf4j.Slf4j;
 //import org.junit.jupiter.api.Test;

@@ -8,11 +8,11 @@
         <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.yannqing</groupId>
-    <artifactId>template</artifactId>
+    <groupId>com.qcx</groupId>
+    <artifactId>property</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>java-backend-template</name>
-    <description>java-backend-template</description>
+    <name>property-management</name>
+    <description>property-management</description>
     <url>https://github.com/yannqing/java-backend-template</url>
     <licenses>
         <license/>

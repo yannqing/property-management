@@ -1,7 +1,7 @@
-package com.yannqing.template.role;
+package com.qcx.property.role;
 
-import com.yannqing.template.enums.PermissionType;
-import com.yannqing.template.service.RoleService;
+import com.qcx.property.enums.PermissionType;
+import com.qcx.property.service.RoleService;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

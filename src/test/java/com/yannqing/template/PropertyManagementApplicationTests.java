@@ -1,4 +1,4 @@
-package com.yannqing.template;
+package com.qcx.property;
 
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
