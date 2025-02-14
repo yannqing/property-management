@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qcx.property.mapper.ExpressOrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.qcx.property.domain.entity.ExpressOrder">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="pickupUser" column="pickupUser" jdbcType="INTEGER"/>
+            <result property="userId" column="userId" jdbcType="VARCHAR"/>
+            <result property="pickupCode" column="pickupCode" jdbcType="VARCHAR"/>
+            <result property="trackingNumber" column="trackingNumber" jdbcType="VARCHAR"/>
+            <result property="expressCompany" column="expressCompany" jdbcType="INTEGER"/>
+            <result property="publishTime" column="publishTime" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,pickupUser,userId,
+        pickupCode,trackingNumber,expressCompany,
+        publishTime,status,createTime,
+        updateTime,isDelete
+    </sql>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qcx.property.mapper.TakeoutPickupRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.qcx.property.domain.entity.TakeoutPickupRecord">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="orderNumber" column="orderNumber" jdbcType="VARCHAR"/>
+            <result property="userId" column="userId" jdbcType="INTEGER"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="courierId" column="courierId" jdbcType="INTEGER"/>
+            <result property="platform" column="platform" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="cabinetNumber" column="cabinetNumber" jdbcType="VARCHAR"/>
+            <result property="notifyTime" column="notifyTime" jdbcType="TIMESTAMP"/>
+            <result property="pickupTime" column="pickupTime" jdbcType="TIMESTAMP"/>
+            <result property="timeoutTime" column="timeoutTime" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,orderNumber,userId,
+        address,courierId,platform,
+        status,remark,cabinetNumber,
+        notifyTime,pickupTime,timeoutTime,
+        createTime,updateTime,isDelete
+    </sql>
+</mapper>

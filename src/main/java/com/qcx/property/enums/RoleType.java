@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 系统角色枚举（对应数据库 role 表格，和 role 表数据一定要同步）
+ * 系统角色枚举（对应数据库 role 表格，和 role 表数据一定要同步，尤其是 roleId）
  */
 @Getter
 @AllArgsConstructor

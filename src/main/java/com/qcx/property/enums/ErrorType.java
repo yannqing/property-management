@@ -10,6 +10,7 @@ public enum ErrorType implements BaseExceptionInterface {
     // TODO 类型统一摆放
     // common 一般异常
     ARGS_NOT_NULL(50001, "参数不能为空，请重试！"),
+    SYSTEM_ERROR(50000, "系统错误"),
 
     // 认证异常
     USERNAME_ALREADY_EXIST(60001, "用户名已存在，请重试！"),
@@ -29,6 +30,9 @@ public enum ErrorType implements BaseExceptionInterface {
     COST_TYPE_CODE_REPEAT(60013, "费用类型编码重复！"),
 
     NO_AUTH_ERROR(60201, "没有权限，请重试"),
+
+    MESSAGE_NOT_EXIST(60014, "消息不存在"),
+    EXPRESS_ORDER_NOT_EXIST(60014, "快递订单不存在"),
 
     //token 异常
     TOKEN_NOT_EXIST(60101, "token 不存在"),
