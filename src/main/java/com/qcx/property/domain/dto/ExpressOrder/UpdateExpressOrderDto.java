@@ -36,7 +36,7 @@ public class UpdateExpressOrderDto {
      * 订单用户id
      */
     @Schema(description = "订单用户id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String userId;
+    private Integer userId;
 
     /**
      * 取件码

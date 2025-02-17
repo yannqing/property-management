@@ -32,7 +32,7 @@ public class AddExpressOrderDto implements Serializable {
      * 订单用户id
      */
     @Schema(description = "订单用户id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String userId;
+    private Integer userId;
 
     /**
      * 取件码
@@ -43,7 +43,7 @@ public class AddExpressOrderDto implements Serializable {
     /**
      * 快递单号
      */
-    @Schema(description = "快递单号", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "快递单号", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String trackingNumber;
 
     /**

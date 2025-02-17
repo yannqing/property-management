@@ -9,6 +9,7 @@ import com.qcx.property.domain.dto.ExpressOrder.UpdateExpressOrderDto;
 import com.qcx.property.domain.entity.ExpressOrder;
 import com.qcx.property.domain.model.BaseResponse;
 import com.qcx.property.domain.model.PageRequest;
+import com.qcx.property.domain.vo.ExpressOrder.ExpressOrderAdminVo;
 import com.qcx.property.domain.vo.ExpressOrder.ExpressOrderVo;
 import com.qcx.property.service.ExpressOrderService;
 import com.qcx.property.utils.ResultUtils;
@@ -35,7 +36,7 @@ public class ExpressOrderController {
     @Operation(summary = "查询所有快递订单（仅限管理员）")
     @GetMapping
     public BaseResponse<?> getAllExpressOrders(QueryExpressOrderDto queryExpressOrderDto) {
-        Page<ExpressOrder> costList = expressOrderService.getAllExpressOrders(queryExpressOrderDto);
+        Page<ExpressOrderAdminVo> costList = expressOrderService.getAllExpressOrders(queryExpressOrderDto);
         return ResultUtils.success(Code.SUCCESS, costList, "查询全部快递订单成功！");
     }
 
@@ -111,6 +112,8 @@ public class ExpressOrderController {
             return ResultUtils.failure(Code.FAILURE, null, "确认快递已收取失败！");
         }
     }
+
+    //TODO 快递到达
 
 
 }

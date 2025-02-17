@@ -1,24 +1,26 @@
-package com.qcx.property.enums;
+package com.qcx.property.enums.activity;
 
+import com.qcx.property.enums.ErrorType;
+import com.qcx.property.enums.takeouts.CabinetStatusType;
 import com.qcx.property.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum MessageType {
-    EXPRESS(1, "快递通知"),
-    SMS(2, "短信通知"),
-    EMAIL(3, "邮件通知"),
-    TAKEOUT(4, "外卖通知"),
-    COMMUNITY_ACTIVITY(5, "社区活动通知"),
+public enum CommunityActivityStatusType {
+    DRAFT(0, "草稿"),
+    REGISTRATION(1, "报名中"),
+    PROCESSING(2, "进行中"),
+    ENDED(3, "已结束"),
+    CANCELED(4, "已取消"),
     ;
 
     private final int id;
     private final String remark;
 
     public static String getRemarkById(int id) {
-        for (MessageType type : MessageType.values()) {
+        for (CommunityActivityStatusType type : CommunityActivityStatusType.values()) {
             if (type.getId() == id) {
                 return type.getRemark();
             }

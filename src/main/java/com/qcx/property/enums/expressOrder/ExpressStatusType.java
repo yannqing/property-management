@@ -8,13 +8,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ExpressStatusType {
-    PENDING(1, "待处理"),
+    PENDING(1, "运输中"),
     PICKED_UP(2, "已取件"),
     STORED(3, "已存放"),
     FINISHED(4, "已完成"),
     CANCELED(5, "已取消"),
     EXCEPTION(6, "异常"),
-    PROCESSING(7, "处理中")
+    PROCESSING(7, "待处理")
     ;
 
     private final int id;

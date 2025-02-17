@@ -42,11 +42,6 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
     @Resource
     private UserMapper userMapper;
 
-    /**
-     * 查询所有消息通知（仅限管理员）
-     * @param queryMessageDto 查询dto
-     * @return 分页结果
-     */
     @Override
     public Page<Message> getAllMessages(QueryMessageDto queryMessageDto) {
         // 判空
@@ -74,13 +69,6 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         return this.page(new Page<>(queryMessageDto.getCurrent(), queryMessageDto.getPageSize()), queryWrapper);
     }
 
-    /**
-     * 查询个人的消息通知
-     * @param pageRequest 分页请求
-     * @param request session 会话
-     * @return 消息封装
-     * @throws JsonProcessingException 异常
-     */
     @Override
     public Page<MessageVo> getMyselfMessages(PageRequest pageRequest, HttpServletRequest request) throws JsonProcessingException {
         User loginUser = JwtUtils.getUserFromToken(request.getHeader("token"));
@@ -105,11 +93,6 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         return new Page<MessageVo>(pageRequest.getCurrent(), pageRequest.getPageSize()).setRecords(messageVoList);
     }
 
-    /**
-     * 更新消息通知
-     * @param updateMessageDto 更新dto
-     * @return 更新结果
-     */
     @Override
     public boolean updateMessage(UpdateMessageDto updateMessageDto) {
         // 判空
@@ -129,11 +112,6 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         return updateResult;
     }
 
-    /**
-     * 新增消息通知
-     * @param addMessageDto 新增 dto
-     * @return 新增结果
-     */
     @Override
     public boolean addMessage(AddMessageDto addMessageDto) {
         // 判空
@@ -153,11 +131,6 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         return saveResult;
     }
 
-    /**
-     * 删除单个消息通知（仅限管理员）
-     * @param id 要删除的消息通知id
-     * @return 返回删除结果
-     */
     @Override
     public boolean deleteMessage(Integer id) {
         Optional.ofNullable(id)
@@ -172,11 +145,6 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         return deleteResult;
     }
 
-    /**
-     * 批量删除消息通知（仅限管理员）
-     * @param messageIds 要删除的消息 id 数组
-     * @return 返回删除结果
-     */
     @Override
     public boolean deleteBatchMessage(Integer[] messageIds) {
         // 判空

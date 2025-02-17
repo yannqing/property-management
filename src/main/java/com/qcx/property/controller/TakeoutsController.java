@@ -1,6 +1,7 @@
 package com.qcx.property.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qcx.property.common.Code;
 import com.qcx.property.domain.dto.takeouts.AddTakeoutsDto;
 import com.qcx.property.domain.dto.takeouts.QueryTakeoutsDto;
@@ -8,11 +9,13 @@ import com.qcx.property.domain.dto.takeouts.UpdateTakeoutsByUserDto;
 import com.qcx.property.domain.dto.takeouts.UpdateTakeoutsDto;
 import com.qcx.property.domain.entity.TakeoutPickupRecord;
 import com.qcx.property.domain.model.BaseResponse;
+import com.qcx.property.domain.vo.takeoutsRecord.TakeoutsVo;
 import com.qcx.property.service.TakeoutPickupRecordService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -32,7 +35,7 @@ public class TakeoutsController {
     @Operation(summary = "查询所有外卖记录")
     @GetMapping
     public BaseResponse<?> getAllTakeouts(QueryTakeoutsDto queryTakeoutsDto) {
-        Page<TakeoutPickupRecord> costList = takeoutPickupRecordService.getAllTakeouts(queryTakeoutsDto);
+        Page<TakeoutsVo> costList = takeoutPickupRecordService.getAllTakeouts(queryTakeoutsDto);
         return ResultUtils.success(Code.SUCCESS, costList, "查询全部外卖记录成功！");
     }
 
@@ -91,5 +94,47 @@ public class TakeoutsController {
         }
     }
 
+    @Operation(summary = "骑手接单")
+    @PostMapping("/accepts")
+    public BaseResponse<?> acceptOrder(Integer userId, Integer takeoutsId) {
+        boolean result = takeoutPickupRecordService.acceptOrder(userId, takeoutsId);
+        if (result) {
+            return ResultUtils.success(Code.SUCCESS, null, "骑手接单成功！");
+        } else {
+            return ResultUtils.failure(Code.FAILURE, null, "骑手接单失败！");
+        }
+    }
 
+    @Operation(summary = "开始派送")
+    @PostMapping("/delivery_order")
+    public BaseResponse<?> deliverOrder(Integer takeoutsId, HttpServletRequest request) throws JsonProcessingException {
+        boolean result = takeoutPickupRecordService.deliverOrder(takeoutsId, request);
+        if (result) {
+            return ResultUtils.success(Code.SUCCESS, null, "开始派送成功！");
+        } else {
+            return ResultUtils.failure(Code.FAILURE, null, "开始派送失败！");
+        }
+    }
+
+    @Operation(summary = "订单送达")
+    @PostMapping("/arrive")
+    public BaseResponse<?> takeoutsArrive(Integer takeoutsId, Integer cabinetId, HttpServletRequest request) throws JsonProcessingException {
+        boolean result = takeoutPickupRecordService.takeoutsArrive(takeoutsId, cabinetId, request);
+        if (result) {
+            return ResultUtils.success(Code.SUCCESS, null, "外卖送达成功！");
+        } else {
+            return ResultUtils.failure(Code.FAILURE, null, "外卖送达失败失败！");
+        }
+    }
+
+    @Operation(summary = "用户领取订单")
+    @PostMapping("/receive_order")
+    public BaseResponse<?> receiveOrder(Integer takeoutsId, HttpServletRequest request) throws JsonProcessingException {
+        boolean result = takeoutPickupRecordService.receiveOrder(takeoutsId, request);
+        if (result) {
+            return ResultUtils.success(Code.SUCCESS, null, "外卖送达成功！");
+        } else {
+            return ResultUtils.failure(Code.FAILURE, null, "外卖送达失败失败！");
+        }
+    }
 }

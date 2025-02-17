@@ -1,24 +1,23 @@
-package com.qcx.property.enums;
+package com.qcx.property.enums.takeouts;
 
+import com.qcx.property.enums.ErrorType;
 import com.qcx.property.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum MessageType {
-    EXPRESS(1, "快递通知"),
-    SMS(2, "短信通知"),
-    EMAIL(3, "邮件通知"),
-    TAKEOUT(4, "外卖通知"),
-    COMMUNITY_ACTIVITY(5, "社区活动通知"),
+public enum CabinetStatusType {
+    AVAILABLE(0, "可用"),
+    OCCUPIED(1, "已占用"),
+    EXCEPTION(2, "异常"),
     ;
 
     private final int id;
     private final String remark;
 
     public static String getRemarkById(int id) {
-        for (MessageType type : MessageType.values()) {
+        for (CabinetStatusType type : CabinetStatusType.values()) {
             if (type.getId() == id) {
                 return type.getRemark();
             }

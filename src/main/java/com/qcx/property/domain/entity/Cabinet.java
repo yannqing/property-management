@@ -8,53 +8,41 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 活动报名表
- * @TableName activity_registration
+ * 外卖柜表
+ * @TableName cabinet
  */
-@TableName(value ="activity_registration")
+@TableName(value ="cabinet")
 @Data
-public class ActivityRegistration implements Serializable {
+public class Cabinet implements Serializable {
     /**
-     * 主键ID
+     * 主键 id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 活动ID
+     * 外卖柜编号
      */
-    @TableField(value = "activityId")
-    private Integer activityId;
+    @TableField(value = "code")
+    private String code;
 
     /**
-     * 用户id
-     */
-    @TableField(value = "userId")
-    private Integer userId;
-
-    /**
-     * 状态(1:已报名 2:已签到 3:已取消)
+     * 状态（可用/占用/异常）
      */
     @TableField(value = "status")
     private Integer status;
 
     /**
-     * 报名时间
+     * 类型
      */
-    @TableField(value = "registerTime")
-    private Date registerTime;
+    @TableField(value = "type")
+    private Integer type;
 
     /**
-     * 签到时间
+     * 备注
      */
-    @TableField(value = "checkInTime")
-    private Date checkInTime;
-
-    /**
-     * 参与人数（一人可带家属）
-     */
-    @TableField(value = "participantCount")
-    private Integer participantCount;
+    @TableField(value = "description")
+    private String description;
 
     /**
      * 创建时间
@@ -90,14 +78,12 @@ public class ActivityRegistration implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        ActivityRegistration other = (ActivityRegistration) that;
+        Cabinet other = (Cabinet) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getActivityId() == null ? other.getActivityId() == null : this.getActivityId().equals(other.getActivityId()))
-            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+            && (this.getCode() == null ? other.getCode() == null : this.getCode().equals(other.getCode()))
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getRegisterTime() == null ? other.getRegisterTime() == null : this.getRegisterTime().equals(other.getRegisterTime()))
-            && (this.getCheckInTime() == null ? other.getCheckInTime() == null : this.getCheckInTime().equals(other.getCheckInTime()))
-            && (this.getParticipantCount() == null ? other.getParticipantCount() == null : this.getParticipantCount().equals(other.getParticipantCount()))
+            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+            && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
             && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()));
@@ -108,12 +94,10 @@ public class ActivityRegistration implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getActivityId() == null) ? 0 : getActivityId().hashCode());
-        result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
+        result = prime * result + ((getCode() == null) ? 0 : getCode().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
-        result = prime * result + ((getRegisterTime() == null) ? 0 : getRegisterTime().hashCode());
-        result = prime * result + ((getCheckInTime() == null) ? 0 : getCheckInTime().hashCode());
-        result = prime * result + ((getParticipantCount() == null) ? 0 : getParticipantCount().hashCode());
+        result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
+        result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         result = prime * result + ((getIsDelete() == null) ? 0 : getIsDelete().hashCode());
@@ -127,12 +111,10 @@ public class ActivityRegistration implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", activityId=").append(activityId);
-        sb.append(", userId=").append(userId);
+        sb.append(", code=").append(code);
         sb.append(", status=").append(status);
-        sb.append(", registerTime=").append(registerTime);
-        sb.append(", checkInTime=").append(checkInTime);
-        sb.append(", participantCount=").append(participantCount);
+        sb.append(", type=").append(type);
+        sb.append(", description=").append(description);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", isDelete=").append(isDelete);

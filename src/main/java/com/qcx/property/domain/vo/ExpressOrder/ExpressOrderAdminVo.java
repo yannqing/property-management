@@ -1,28 +1,32 @@
 package com.qcx.property.domain.vo.ExpressOrder;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.qcx.property.domain.entity.Announcement;
 import com.qcx.property.domain.entity.ExpressOrder;
-import com.qcx.property.domain.entity.Message;
+import com.qcx.property.domain.vo.announcement.AnnouncementVo;
 import com.qcx.property.domain.vo.user.UserVo;
+import com.qcx.property.enums.ErrorType;
+import com.qcx.property.exception.BusinessException;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @description: 封装快递订单 vo
+ * @description: 快递订单 vo （管理员）
  * @author: yannqing
- * @create: 2025-02-14 17:38
+ * @create: 2025-02-17 19:17
  * @from: <更多资料：yannqing.com>
  **/
 @Data
-public class ExpressOrderVo implements Serializable {
+public class ExpressOrderAdminVo {
+
     /**
-     * 取件用户
+     * 订单id
+     */
+    private Integer id;
+
+    /**
+     * 取件用户id
      */
     private UserVo pickupUser;
 
@@ -56,16 +60,12 @@ public class ExpressOrderVo implements Serializable {
      */
     private String status;
 
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    public static ExpressOrderVo objToVo(ExpressOrder expressOrder) {
+    public static ExpressOrderAdminVo expressOrderToVo(ExpressOrder expressOrder) {
         if (expressOrder == null) {
-            return null;
+            throw new BusinessException(ErrorType.ARGS_NOT_NULL);
         }
-
-        ExpressOrderVo expressOrderVo = new ExpressOrderVo();
-        BeanUtils.copyProperties(expressOrder, expressOrderVo);
-        return expressOrderVo;
+        ExpressOrderAdminVo expressOrderAdminVo = new ExpressOrderAdminVo();
+        BeanUtils.copyProperties(expressOrder, expressOrderAdminVo);
+        return expressOrderAdminVo;
     }
 }

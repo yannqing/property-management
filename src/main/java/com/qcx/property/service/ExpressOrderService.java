@@ -8,6 +8,7 @@ import com.qcx.property.domain.dto.ExpressOrder.UpdateExpressOrderDto;
 import com.qcx.property.domain.entity.ExpressOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qcx.property.domain.model.PageRequest;
+import com.qcx.property.domain.vo.ExpressOrder.ExpressOrderAdminVo;
 import com.qcx.property.domain.vo.ExpressOrder.ExpressOrderVo;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -23,7 +24,7 @@ public interface ExpressOrderService extends IService<ExpressOrder> {
      * @param queryExpressOrderDto 查询dto
      * @return 分页结果
      */
-    Page<ExpressOrder> getAllExpressOrders(QueryExpressOrderDto queryExpressOrderDto);
+    Page<ExpressOrderAdminVo> getAllExpressOrders(QueryExpressOrderDto queryExpressOrderDto);
 
     /**
      * 查询所有快递订单（个人）

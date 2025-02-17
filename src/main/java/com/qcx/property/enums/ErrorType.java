@@ -37,7 +37,26 @@ public enum ErrorType implements BaseExceptionInterface {
     EXPRESS_IS_NOT_BELONG_YOU(60016, "此快递不属于你"),
     EXPRESS_CANNOT_CONFIRM(60017, "无法确认此快递，请联系管理员"),
 
-    TAKEOUTS_NOT_EXIST(60018, "外卖订单不存在"),
+    TAKEOUTS_NOT_EXIST(60018, "外卖订单不存在，请重试"),
+    TAKEOUTS_NOT_DELIVERY(60021, "外卖订单没有在派送中，无法送达"),
+    TAKEOUTS_CANNOT_DELIVERY(60030, "订单状态有误，无法接单，请重试"),
+
+    CABINET_NOT_EXIST(60019, "外卖柜不存在，请重试"),
+    CABINET_CODE_REPEAT(60020, "外卖柜编号重复！请重试，请重试"),
+    CABINET_NOT_AVAILABLE(60022, "外卖柜不可用，请重试，请重试"),
+
+    COMMUNITY_ACTIVITY_NOT_EXIST(60023, "社区活动不存在，请重试"),
+    COMMUNITY_ACTIVITY_TITLE_NOT_NULL(60024, "社区活动标题不能为空，请重试"),
+    COMMUNITY_ACTIVITY_TYPE_NOT_NULL(60031, "社区活动类型不能为空，请重试"),
+    COMMUNITY_ACTIVITY_NOT_IN_REGISTRATION(60028, "活动不在报名时间段，请重试"),
+    COMMUNITY_ACTIVITY_NO_ENOUGH_PLACE(60029, "活动没有足够的名额，请重试"),
+
+
+    ACTIVITY_REGISTRATION_NOT_EXIST(60025, "活动报名不存在，请重试"),
+    ACTIVITY_REGISTRATION_ACTIVITY_ID_NOT_NULL(60026, "活动id不能为空，请重试"),
+    ACTIVITY_REGISTRATION_USER_ID_NOT_NULL(60027, "参赛用户id不能为空，请重试"),
+
+
 
     //token 异常
     TOKEN_NOT_EXIST(60101, "token 不存在"),

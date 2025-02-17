@@ -14,6 +14,7 @@ import com.qcx.property.domain.entity.ExpressOrder;
 import com.qcx.property.domain.entity.Message;
 import com.qcx.property.domain.entity.User;
 import com.qcx.property.domain.model.PageRequest;
+import com.qcx.property.domain.vo.ExpressOrder.ExpressOrderAdminVo;
 import com.qcx.property.domain.vo.ExpressOrder.ExpressOrderVo;
 import com.qcx.property.domain.vo.message.MessageVo;
 import com.qcx.property.domain.vo.user.UserVo;
@@ -27,6 +28,7 @@ import com.qcx.property.service.ExpressOrderService;
 import com.qcx.property.mapper.ExpressOrderMapper;
 import com.qcx.property.service.MessageService;
 import com.qcx.property.utils.JwtUtils;
+import com.qcx.property.utils.Tools;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -54,14 +56,14 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
     private MessageService messageService;
 
     @Override
-    public Page<ExpressOrder> getAllExpressOrders(QueryExpressOrderDto queryExpressOrderDto) {
+    public Page<ExpressOrderAdminVo> getAllExpressOrders(QueryExpressOrderDto queryExpressOrderDto) {
         // 判空
         Optional.ofNullable(queryExpressOrderDto)
                 .orElseThrow(() -> new BusinessException(ErrorType.ARGS_NOT_NULL));
 
         Integer id = queryExpressOrderDto.getId();
         Integer pickupUser = queryExpressOrderDto.getPickupUser();
-        String userId = queryExpressOrderDto.getUserId();
+        Integer userId = queryExpressOrderDto.getUserId();
         String pickupCode = queryExpressOrderDto.getPickupCode();
         String trackingNumber = queryExpressOrderDto.getTrackingNumber();
         Integer expressCompany = queryExpressOrderDto.getExpressCompany();
@@ -80,8 +82,18 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         queryWrapper.eq(userId!= null, "userId", userId);
         queryWrapper.eq(status!= null, "description", status);
         log.info("查询所有快递订单");
+        Page<ExpressOrder> page = this.page(new Page<>(queryExpressOrderDto.getCurrent(), queryExpressOrderDto.getPageSize()), queryWrapper);
+        List<ExpressOrderAdminVo> expressOrderAdminVoList = page.getRecords().stream().map(expressOrder -> {
+            ExpressOrderAdminVo expressOrderAdminVo = ExpressOrderAdminVo.expressOrderToVo(expressOrder);
+            expressOrderAdminVo.setPickupUser(UserVo.objToVo(userMapper.selectById(expressOrder.getPickupUser())));
+            expressOrderAdminVo.setUserId(UserVo.objToVo(userMapper.selectById(expressOrder.getUserId())));
+            expressOrderAdminVo.setExpressCompany(ExpressCompanyType.getRemarkById(expressOrder.getExpressCompany()));
+            expressOrderAdminVo.setStatus(ExpressStatusType.getRemarkById(expressOrder.getStatus()));
 
-        return this.page(new Page<>(queryExpressOrderDto.getCurrent(), queryExpressOrderDto.getPageSize()), queryWrapper);
+            return expressOrderAdminVo;
+        }).toList();
+
+        return new Page<ExpressOrderAdminVo>(page.getCurrent(), page.getSize(), page.getTotal()).setRecords(expressOrderAdminVoList);
     }
 
     @Override
@@ -92,7 +104,7 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         }
 
         // 查询所有信息
-        List<ExpressOrder> allExpressOrderInfo = this.baseMapper.selectList(new QueryWrapper<ExpressOrder>().eq("receiveUser", loginUser.getUserId()));
+        List<ExpressOrder> allExpressOrderInfo = this.baseMapper.selectList(new QueryWrapper<ExpressOrder>().eq("userId", loginUser.getUserId()));
 
         // 二次封装
         List<ExpressOrderVo> expressOrderVoList = allExpressOrderInfo.stream().map(expressOrder -> {
@@ -135,17 +147,21 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         Optional.ofNullable(addExpressOrderDto.getUserId())
                 .orElseThrow(() -> new BusinessException(ErrorType.ARGS_NOT_NULL));
 
-        //快递单号不能为空
-        Optional.ofNullable(addExpressOrderDto.getTrackingNumber())
-                .orElseThrow(() -> new BusinessException(ErrorType.ARGS_NOT_NULL));
-
         //快递公司id不能为空
         Optional.ofNullable(addExpressOrderDto.getExpressCompany())
                 .orElseThrow(() -> new BusinessException(ErrorType.ARGS_NOT_NULL));
         // 添加消息通知
         ExpressOrder expressOrder = AddExpressOrderDto.objToExpressOrder(addExpressOrderDto);
+        expressOrder.setTrackingNumber(Tools.generateOrderNumber());
         boolean saveResult = this.save(expressOrder);
         log.info("新增快递订单");
+
+        // TODO 发送消息通知
+        AddMessageDto addMessageDto = new AddMessageDto();
+        addMessageDto.setType(MessageType.EXPRESS.getId());
+        addMessageDto.setContent("您有新的快递订单，请核实");
+        addMessageDto.setReceiveUser(Integer.valueOf(addExpressOrderDto.getUserId()));
+
 
         return saveResult;
     }
@@ -244,7 +260,7 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
 
         // 检查此快递的状态是否是已取件
         if (!confirmedExpressOrder.getStatus().equals(ExpressStatusType.PICKED_UP.getId())) {
-            throw new BusinessException(ErrorType.SYSTEM_ERROR);
+            throw new BusinessException(ErrorType.EXPRESS_CANNOT_CONFIRM);
         }
 
         // 确认
