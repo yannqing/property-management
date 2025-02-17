@@ -1,9 +1,8 @@
 package com.qcx.property.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
@@ -19,7 +18,7 @@ public class TakeoutPickupRecord implements Serializable {
      * 主键ID
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private Integer id;
 
     /**
      * 外卖订单号
@@ -49,10 +48,10 @@ public class TakeoutPickupRecord implements Serializable {
      * 外卖平台
      */
     @TableField(value = "platform")
-    private String platform;
+    private Integer platform;
 
     /**
-     * 状态(1:已收取 2:已通知 3:已领取 4:已超时)
+     * 状态(已下单/骑手已接单/派送中/已送达/已完成/已取消/异常)
      */
     @TableField(value = "status")
     private Integer status;
@@ -67,7 +66,13 @@ public class TakeoutPickupRecord implements Serializable {
      * 柜号
      */
     @TableField(value = "cabinetNumber")
-    private String cabinetNumber;
+    private Integer cabinetNumber;
+
+    /**
+     * 预计送达时间
+     */
+    @TableField(value = "estimatedDeliveryTime")
+    private Date estimatedDeliveryTime;
 
     /**
      * 送达通知时间
@@ -102,9 +107,11 @@ public class TakeoutPickupRecord implements Serializable {
     /**
      * 逻辑删除
      */
+    @TableLogic
     @TableField(value = "isDelete")
     private Integer isDelete;
 
+    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
@@ -129,6 +136,7 @@ public class TakeoutPickupRecord implements Serializable {
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
             && (this.getRemark() == null ? other.getRemark() == null : this.getRemark().equals(other.getRemark()))
             && (this.getCabinetNumber() == null ? other.getCabinetNumber() == null : this.getCabinetNumber().equals(other.getCabinetNumber()))
+            && (this.getEstimatedDeliveryTime() == null ? other.getEstimatedDeliveryTime() == null : this.getEstimatedDeliveryTime().equals(other.getEstimatedDeliveryTime()))
             && (this.getNotifyTime() == null ? other.getNotifyTime() == null : this.getNotifyTime().equals(other.getNotifyTime()))
             && (this.getPickupTime() == null ? other.getPickupTime() == null : this.getPickupTime().equals(other.getPickupTime()))
             && (this.getTimeoutTime() == null ? other.getTimeoutTime() == null : this.getTimeoutTime().equals(other.getTimeoutTime()))
@@ -150,6 +158,7 @@ public class TakeoutPickupRecord implements Serializable {
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getRemark() == null) ? 0 : getRemark().hashCode());
         result = prime * result + ((getCabinetNumber() == null) ? 0 : getCabinetNumber().hashCode());
+        result = prime * result + ((getEstimatedDeliveryTime() == null) ? 0 : getEstimatedDeliveryTime().hashCode());
         result = prime * result + ((getNotifyTime() == null) ? 0 : getNotifyTime().hashCode());
         result = prime * result + ((getPickupTime() == null) ? 0 : getPickupTime().hashCode());
         result = prime * result + ((getTimeoutTime() == null) ? 0 : getTimeoutTime().hashCode());
@@ -174,6 +183,7 @@ public class TakeoutPickupRecord implements Serializable {
         sb.append(", status=").append(status);
         sb.append(", remark=").append(remark);
         sb.append(", cabinetNumber=").append(cabinetNumber);
+        sb.append(", estimatedDeliveryTime=").append(estimatedDeliveryTime);
         sb.append(", notifyTime=").append(notifyTime);
         sb.append(", pickupTime=").append(pickupTime);
         sb.append(", timeoutTime=").append(timeoutTime);

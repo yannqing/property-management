@@ -7,7 +7,7 @@
     <resultMap id="BaseResultMap" type="com.qcx.property.domain.entity.ExpressOrder">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="pickupUser" column="pickupUser" jdbcType="INTEGER"/>
-            <result property="userId" column="userId" jdbcType="VARCHAR"/>
+            <result property="userId" column="userId" jdbcType="INTEGER"/>
             <result property="pickupCode" column="pickupCode" jdbcType="VARCHAR"/>
             <result property="trackingNumber" column="trackingNumber" jdbcType="VARCHAR"/>
             <result property="expressCompany" column="expressCompany" jdbcType="INTEGER"/>

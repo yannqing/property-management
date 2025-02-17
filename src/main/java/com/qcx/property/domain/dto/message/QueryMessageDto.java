@@ -16,7 +16,7 @@ import java.util.Date;
  **/
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Schema(name = "QueryCostTypeDto", description = "查询所有消息通知请求参数")
+@Schema(name = "QueryTakeoutsDto", description = "查询所有消息通知请求参数")
 public class QueryMessageDto extends PageRequest implements Serializable {
     /**
      * 消息类型

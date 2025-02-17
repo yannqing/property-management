@@ -18,15 +18,65 @@ import jakarta.servlet.http.HttpServletRequest;
 */
 public interface ExpressOrderService extends IService<ExpressOrder> {
 
+    /**
+     * 查询所有快递订单（仅限管理员）
+     * @param queryExpressOrderDto 查询dto
+     * @return 分页结果
+     */
     Page<ExpressOrder> getAllExpressOrders(QueryExpressOrderDto queryExpressOrderDto);
 
+    /**
+     * 查询所有快递订单（个人）
+     * @param pageRequest 分页请求
+     * @param request 会话
+     * @return 快递订单封装
+     * @throws JsonProcessingException 异常
+     */
     Page<ExpressOrderVo> getMyselfExpressOrders(PageRequest pageRequest, HttpServletRequest request) throws JsonProcessingException;
 
+    /**
+     * 更新快递订单
+     * @param updateExpressOrderDto 更新dto
+     * @return 更新结果
+     */
     boolean updateExpressOrder(UpdateExpressOrderDto updateExpressOrderDto);
 
+    /**
+     * 新增快递订单
+     * @param addExpressOrderDto 新增 dto
+     * @return 新增结果
+     */
     boolean addExpressOrder(AddExpressOrderDto addExpressOrderDto);
 
+    /**
+     * 删除单个快递订单（仅限管理员）
+     * @param id 要删除的快递订单id
+     * @return 返回删除结果
+     */
     boolean deleteExpressOrder(Integer id);
 
+    /**
+     * 批量删除消快递订单（仅限管理员）
+     * @param expressOrderIds 要删除的快递订单 id 数组
+     * @return 返回删除结果
+     */
     boolean deleteBatchExpressOrder(Integer... expressOrderIds);
+
+    /**
+     * 取件
+     * @param expressOderId 快递订单 id
+     * @param request 会话 request
+     * @return 返回取件结果
+     * @throws JsonProcessingException token 解析异常
+     */
+    boolean pickUpExpress(Integer expressOderId, HttpServletRequest request) throws JsonProcessingException;
+
+    /**
+     * 确认快递
+     * @param expressOderId 快递订单 id
+     * @param request 会话 request
+     * @return 确认结果
+     * @throws JsonProcessingException token 解析异常
+     */
+    boolean confirmExpress(Integer expressOderId, HttpServletRequest request) throws JsonProcessingException;
 }

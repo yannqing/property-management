@@ -5,15 +5,16 @@
 <mapper namespace="com.qcx.property.mapper.TakeoutPickupRecordMapper">
 
     <resultMap id="BaseResultMap" type="com.qcx.property.domain.entity.TakeoutPickupRecord">
-            <id property="id" column="id" jdbcType="BIGINT"/>
+            <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="orderNumber" column="orderNumber" jdbcType="VARCHAR"/>
             <result property="userId" column="userId" jdbcType="INTEGER"/>
             <result property="address" column="address" jdbcType="VARCHAR"/>
             <result property="courierId" column="courierId" jdbcType="INTEGER"/>
-            <result property="platform" column="platform" jdbcType="VARCHAR"/>
+            <result property="platform" column="platform" jdbcType="TINYINT"/>
             <result property="status" column="status" jdbcType="TINYINT"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
-            <result property="cabinetNumber" column="cabinetNumber" jdbcType="VARCHAR"/>
+            <result property="cabinetNumber" column="cabinetNumber" jdbcType="INTEGER"/>
+            <result property="estimatedDeliveryTime" column="estimatedDeliveryTime" jdbcType="TIMESTAMP"/>
             <result property="notifyTime" column="notifyTime" jdbcType="TIMESTAMP"/>
             <result property="pickupTime" column="pickupTime" jdbcType="TIMESTAMP"/>
             <result property="timeoutTime" column="timeoutTime" jdbcType="TIMESTAMP"/>
@@ -25,7 +26,7 @@
     <sql id="Base_Column_List">
         id,orderNumber,userId,
         address,courierId,platform,
-        status,remark,cabinetNumber,
+        status,remark,cabinetNumber,estimatedDeliveryTime,
         notifyTime,pickupTime,timeoutTime,
         createTime,updateTime,isDelete
     </sql>

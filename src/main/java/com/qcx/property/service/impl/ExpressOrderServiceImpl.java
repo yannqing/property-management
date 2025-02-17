@@ -1,6 +1,7 @@
 package com.qcx.property.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,6 +25,7 @@ import com.qcx.property.exception.BusinessException;
 import com.qcx.property.mapper.UserMapper;
 import com.qcx.property.service.ExpressOrderService;
 import com.qcx.property.mapper.ExpressOrderMapper;
+import com.qcx.property.service.MessageService;
 import com.qcx.property.utils.JwtUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,12 +50,9 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
     @Resource
     private UserMapper userMapper;
 
+    @Resource
+    private MessageService messageService;
 
-    /**
-     * 查询所有快递订单（仅限管理员）
-     * @param queryExpressOrderDto 查询dto
-     * @return 分页结果
-     */
     @Override
     public Page<ExpressOrder> getAllExpressOrders(QueryExpressOrderDto queryExpressOrderDto) {
         // 判空
@@ -85,13 +84,6 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         return this.page(new Page<>(queryExpressOrderDto.getCurrent(), queryExpressOrderDto.getPageSize()), queryWrapper);
     }
 
-    /**
-     * 查询所有快递订单（个人）
-     * @param pageRequest 分页请求
-     * @param request 会话
-     * @return 快递订单封装
-     * @throws JsonProcessingException 异常
-     */
     @Override
     public Page<ExpressOrderVo> getMyselfExpressOrders(PageRequest pageRequest, HttpServletRequest request) throws JsonProcessingException {
         User loginUser = JwtUtils.getUserFromToken(request.getHeader("token"));
@@ -107,8 +99,8 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
             ExpressOrderVo expressOrderVo = ExpressOrderVo.objToVo(expressOrder);
             expressOrderVo.setPickupUser(UserVo.objToVo(userMapper.selectById(expressOrder.getPickupUser())));
             expressOrderVo.setUserId(UserVo.objToVo(userMapper.selectById(expressOrder.getUserId())));
-            expressOrderVo.setExpressCompany(ExpressCompanyType.getExpressCompanyById(expressOrder.getExpressCompany()));
-            expressOrderVo.setStatus(ExpressStatusType.getExpressStatusById(expressOrder.getStatus()));
+            expressOrderVo.setExpressCompany(ExpressCompanyType.getRemarkById(expressOrder.getExpressCompany()));
+            expressOrderVo.setStatus(ExpressStatusType.getRemarkById(expressOrder.getStatus()));
 
             return expressOrderVo;
         }).toList();
@@ -117,11 +109,6 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         return new Page<ExpressOrderVo>(pageRequest.getCurrent(), pageRequest.getPageSize()).setRecords(expressOrderVoList);
     }
 
-    /**
-     * 更新快递订单
-     * @param updateExpressOrderDto 更新dto
-     * @return 更新结果
-     */
     @Override
     public boolean updateExpressOrder(UpdateExpressOrderDto updateExpressOrderDto) {
         // 判空
@@ -141,11 +128,6 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         return updateResult;
     }
 
-    /**
-     * 新增快递订单
-     * @param addExpressOrderDto 新增 dto
-     * @return 新增结果
-     */
     @Override
     public boolean addExpressOrder(AddExpressOrderDto addExpressOrderDto) {
         // 判空
@@ -168,11 +150,6 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         return saveResult;
     }
 
-    /**
-     * 删除单个快递订单（仅限管理员）
-     * @param id 要删除的快递订单id
-     * @return 返回删除结果
-     */
     @Override
     public boolean deleteExpressOrder(Integer id) {
         Optional.ofNullable(id)
@@ -187,11 +164,6 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         return deleteResult;
     }
 
-    /**
-     * 批量删除消快递订单（仅限管理员）
-     * @param expressOrderIds 要删除的快递订单 id 数组
-     * @return 返回删除结果
-     */
     @Override
     public boolean deleteBatchExpressOrder(Integer... expressOrderIds) {
         // 判空
@@ -210,6 +182,90 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         log.info("批量删除快递订单");
 
         return deleteResult > 0;
+    }
+
+    @Override
+    public boolean pickUpExpress(Integer expressOderId, HttpServletRequest request) throws JsonProcessingException {
+        User loginUser = JwtUtils.getUserFromToken(request.getHeader("token"));
+        if (loginUser == null) {
+            throw new BusinessException(ErrorType.TOKEN_INVALID);
+        }
+
+        ExpressOrder pickupedExpressOrder = this.getById(expressOderId);
+        // id 校验
+        Optional.ofNullable(pickupedExpressOrder)
+                .orElseThrow(() -> new BusinessException(ErrorType.EXPRESS_ORDER_NOT_EXIST));
+
+        // 检查快递的状态是否可取
+        if (!pickupedExpressOrder.getStatus().equals(ExpressStatusType.STORED.getId())) {
+            throw new BusinessException(ErrorType.EXPRESS_CANNOT_PICK_UP);
+        }
+
+        // 取件: 修改取件用户为登录用户；修改快递状态为已取件
+        boolean updateResult = this.update(new UpdateWrapper<ExpressOrder>()
+                .eq("id", expressOderId)
+                .set("status", ExpressStatusType.PICKED_UP.getId())
+                .set("pickupUser", loginUser.getUserId())
+        );
+
+        // 发送消息通知订单用户，快递已经被取件
+        AddMessageDto addMessageDto = new AddMessageDto();
+        addMessageDto.setType(MessageType.EXPRESS.getId());
+        addMessageDto.setContent("您的快递被取走，请确认");
+        addMessageDto.setReceiveUser(pickupedExpressOrder.getUserId());
+        addMessageDto.setStatus(0);
+
+        boolean addMessageResult = messageService.addMessage(addMessageDto);
+        log.info("取件：id：{}, 取件人：{}", expressOderId, loginUser.getUserId());
+        if (!addMessageResult) {
+            log.error("取件：id：{}, 取件人：{}, 消息推送失败", expressOderId, loginUser.getUserId());
+        }
+
+        //返回结果
+        return updateResult;
+    }
+
+    @Override
+    public boolean confirmExpress(Integer expressOderId, HttpServletRequest request) throws JsonProcessingException {
+        User loginUser = JwtUtils.getUserFromToken(request.getHeader("token"));
+        if (loginUser == null) {
+            throw new BusinessException(ErrorType.TOKEN_INVALID);
+        }
+
+        ExpressOrder confirmedExpressOrder = this.getById(expressOderId);
+        // id 校验
+        Optional.ofNullable(confirmedExpressOrder)
+                .orElseThrow(() -> new BusinessException(ErrorType.EXPRESS_ORDER_NOT_EXIST));
+
+        // 校验此快递的订单用户是否是自己
+        if (!confirmedExpressOrder.getUserId().equals(loginUser.getUserId())) {
+            throw new BusinessException(ErrorType.EXPRESS_IS_NOT_BELONG_YOU);
+        }
+
+        // 检查此快递的状态是否是已取件
+        if (!confirmedExpressOrder.getStatus().equals(ExpressStatusType.PICKED_UP.getId())) {
+            throw new BusinessException(ErrorType.SYSTEM_ERROR);
+        }
+
+        // 确认
+        boolean updateResult = this.update(new UpdateWrapper<ExpressOrder>()
+                .eq("id", expressOderId)
+                .set("status", ExpressStatusType.FINISHED)
+        );
+
+        // 发送通知
+        AddMessageDto addMessageDto = new AddMessageDto();
+        addMessageDto.setType(MessageType.EXPRESS.getId());
+        addMessageDto.setContent("您的快递已确认领取，请注意！");
+        addMessageDto.setReceiveUser(loginUser.getUserId());
+
+        boolean sendMessageResult = messageService.addMessage(addMessageDto);
+        log.info("确认快递：id：{}, 取件人：{}", expressOderId, loginUser.getUserId());
+        if (!sendMessageResult) {
+            log.info("确认快递：id：{}, 取件人：{}, 消息推送失败", expressOderId, loginUser.getUserId());
+        }
+
+        return updateResult;
     }
 }
 

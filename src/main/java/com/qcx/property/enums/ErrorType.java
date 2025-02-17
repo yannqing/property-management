@@ -33,6 +33,11 @@ public enum ErrorType implements BaseExceptionInterface {
 
     MESSAGE_NOT_EXIST(60014, "消息不存在"),
     EXPRESS_ORDER_NOT_EXIST(60014, "快递订单不存在"),
+    EXPRESS_CANNOT_PICK_UP(60015, "快递无法取件"),
+    EXPRESS_IS_NOT_BELONG_YOU(60016, "此快递不属于你"),
+    EXPRESS_CANNOT_CONFIRM(60017, "无法确认此快递，请联系管理员"),
+
+    TAKEOUTS_NOT_EXIST(60018, "外卖订单不存在"),
 
     //token 异常
     TOKEN_NOT_EXIST(60101, "token 不存在"),

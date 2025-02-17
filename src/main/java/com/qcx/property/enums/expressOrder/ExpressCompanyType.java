@@ -20,7 +20,7 @@ public enum ExpressCompanyType {
     private final int id;
     private final String remark;
 
-    public static String getExpressCompanyById(int id) {
+    public static String getRemarkById(int id) {
         for (ExpressCompanyType type : ExpressCompanyType.values()) {
             if (type.getId() == id) {
                 return type.getRemark();

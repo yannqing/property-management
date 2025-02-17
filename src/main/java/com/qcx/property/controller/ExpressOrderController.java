@@ -81,12 +81,34 @@ public class ExpressOrderController {
 
     @DeleteMapping("/batch")
     @Operation(summary = "批量删除快递订单")
-    public BaseResponse<?> deleteBatchExpressOrder(Integer... costTypeIds) {
-        boolean result = expressOrderService.deleteBatchExpressOrder(costTypeIds);
+    public BaseResponse<?> deleteBatchExpressOrder(Integer... expressOrderIds) {
+        boolean result = expressOrderService.deleteBatchExpressOrder(expressOrderIds);
         if (result) {
             return ResultUtils.success(Code.SUCCESS, null, "批量删除快递订单成功！");
         } else {
             return ResultUtils.failure(Code.FAILURE, null, "批量删除快递订单失败！");
+        }
+    }
+
+    @PostMapping("/pickup")
+    @Operation(summary = "代取快递")
+    public BaseResponse<?> pickUpExpress(Integer expressOderId, HttpServletRequest request) throws JsonProcessingException {
+        boolean result = expressOrderService.pickUpExpress(expressOderId, request);
+        if (result) {
+            return ResultUtils.success(Code.SUCCESS, null, "代取快递成功！");
+        } else {
+            return ResultUtils.failure(Code.FAILURE, null, "代取快递失败！");
+        }
+    }
+
+    @PostMapping("/confirm")
+    @Operation(summary = "确认快递已收取")
+    public BaseResponse<?> confirmExpress(Integer expressOderId, HttpServletRequest request) throws JsonProcessingException {
+        boolean result = expressOrderService.confirmExpress(expressOderId, request);
+        if (result) {
+            return ResultUtils.success(Code.SUCCESS, null, "确认快递已收取成功！");
+        } else {
+            return ResultUtils.failure(Code.FAILURE, null, "确认快递已收取失败！");
         }
     }
 

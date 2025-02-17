@@ -117,7 +117,7 @@ public class CostTypeServiceImpl extends ServiceImpl<CostTypeMapper, CostType>
                 .orElseThrow(() -> new BusinessException(ErrorType.COST_NOT_EXIST));
 
         boolean deleteResult = this.removeById(id);
-        log.info("删除费用类型");
+        log.info("删除费用类型 id：{}", id);
 
         return deleteResult;
     }

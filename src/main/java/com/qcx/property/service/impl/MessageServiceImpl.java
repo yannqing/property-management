@@ -96,7 +96,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
             MessageVo messageVo = MessageVo.objToVo(message);
             messageVo.setSendUser(UserVo.objToVo(userMapper.selectById(message.getSendUser())));
             messageVo.setReceiveUser(UserVo.objToVo(userMapper.selectById(message.getReceiveUser())));
-            messageVo.setType(MessageType.getMessageTypeById(message.getType()));
+            messageVo.setType(MessageType.getRemarkById(message.getType()));
 
             return messageVo;
         }).toList();
