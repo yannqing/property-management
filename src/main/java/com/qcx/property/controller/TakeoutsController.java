@@ -13,6 +13,9 @@ import com.qcx.property.domain.vo.takeoutsRecord.TakeoutsVo;
 import com.qcx.property.service.TakeoutPickupRecordService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,6 +76,7 @@ public class TakeoutsController {
     }
 
     @DeleteMapping("/{id}")
+    @Parameters(@Parameter(name = "id", description = "外卖订单 id", required = true, in = ParameterIn.PATH))
     @Operation(summary = "删除单个外卖记录")
     public BaseResponse<?> deleteTakeouts(@PathVariable Integer id) {
         boolean result = takeoutPickupRecordService.deleteTakeouts(id);
@@ -84,6 +88,7 @@ public class TakeoutsController {
     }
 
     @DeleteMapping("/batch")
+    @Parameters(@Parameter(name = "takeoutIds", description = "外卖订单 id 数组", required = true))
     @Operation(summary = "批量删除外卖记录")
     public BaseResponse<?> deleteBatchTakeouts(Integer... takeoutIds) {
         boolean result = takeoutPickupRecordService.deleteBatchTakeouts(takeoutIds);
@@ -95,6 +100,10 @@ public class TakeoutsController {
     }
 
     @Operation(summary = "骑手接单")
+    @Parameters({
+            @Parameter(name = "userId", description = "骑手 id", required = true),
+            @Parameter(name = "takeoutsId", description = "外卖订单 id", required = true)
+    })
     @PostMapping("/accepts")
     public BaseResponse<?> acceptOrder(Integer userId, Integer takeoutsId) {
         boolean result = takeoutPickupRecordService.acceptOrder(userId, takeoutsId);
@@ -106,6 +115,7 @@ public class TakeoutsController {
     }
 
     @Operation(summary = "开始派送")
+    @Parameters(@Parameter(name = "takeoutsId", description = "外卖订单 id", required = true))
     @PostMapping("/delivery_order")
     public BaseResponse<?> deliverOrder(Integer takeoutsId, HttpServletRequest request) throws JsonProcessingException {
         boolean result = takeoutPickupRecordService.deliverOrder(takeoutsId, request);
@@ -117,6 +127,10 @@ public class TakeoutsController {
     }
 
     @Operation(summary = "订单送达")
+    @Parameters({
+            @Parameter(name = "takeoutsId", description = "外卖订单 id", required = true),
+            @Parameter(name = "cabinetId", description = "外卖柜 id", required = true)
+    })
     @PostMapping("/arrive")
     public BaseResponse<?> takeoutsArrive(Integer takeoutsId, Integer cabinetId, HttpServletRequest request) throws JsonProcessingException {
         boolean result = takeoutPickupRecordService.takeoutsArrive(takeoutsId, cabinetId, request);
@@ -128,13 +142,16 @@ public class TakeoutsController {
     }
 
     @Operation(summary = "用户领取订单")
+    @Parameters({
+            @Parameter(name = "takeoutsId", description = "外卖订单 id", required = true)
+    })
     @PostMapping("/receive_order")
     public BaseResponse<?> receiveOrder(Integer takeoutsId, HttpServletRequest request) throws JsonProcessingException {
         boolean result = takeoutPickupRecordService.receiveOrder(takeoutsId, request);
         if (result) {
             return ResultUtils.success(Code.SUCCESS, null, "外卖送达成功！");
         } else {
-            return ResultUtils.failure(Code.FAILURE, null, "外卖送达失败失败！");
+            return ResultUtils.failure(Code.FAILURE, null, "外卖送达失败！");
         }
     }
 }

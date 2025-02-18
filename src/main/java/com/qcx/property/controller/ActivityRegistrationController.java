@@ -5,12 +5,14 @@ import com.qcx.property.common.Code;
 import com.qcx.property.domain.dto.communityActivity.AddActivityRegistrationDto;
 import com.qcx.property.domain.dto.communityActivity.QueryActivityRegistrationDto;
 import com.qcx.property.domain.dto.communityActivity.UpdateActivityRegistrationDto;
-import com.qcx.property.domain.entity.ActivityRegistration;
 import com.qcx.property.domain.model.BaseResponse;
 import com.qcx.property.domain.vo.communityActivity.ActivityRegistrationVo;
 import com.qcx.property.service.ActivityRegistrationService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +61,7 @@ public class ActivityRegistrationController {
     }
 
     @DeleteMapping("/{id}")
+    @Parameters(@Parameter(name = "id", description = "活动报名 id", required = true, in = ParameterIn.PATH))
     @Operation(summary = "删除单个活动报名")
     public BaseResponse<?> deleteActivityRegistration(@PathVariable Integer id) {
         boolean result = activityRegistrationService.deleteActivityRegistration(id);
@@ -70,6 +73,7 @@ public class ActivityRegistrationController {
     }
 
     @DeleteMapping("/batch")
+    @Parameters(@Parameter(name = "activityRegistrationIds", description = "活动报名 id 数组", required = true))
     @Operation(summary = "批量删除活动报名")
     public BaseResponse<?> deleteBatchActivityRegistration(Integer... activityRegistrationIds) {
         boolean result = activityRegistrationService.deleteBatchActivityRegistration(activityRegistrationIds);

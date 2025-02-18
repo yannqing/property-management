@@ -18,6 +18,9 @@ import com.qcx.property.domain.vo.user.UserVo;
 import com.qcx.property.service.UserService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,6 +57,7 @@ public class UserController {
 
     @AuthCheck(code = PermissionConstant.USER_DELETE_ONE)
     @Operation(summary = "删除用户（管理员）")
+    @Parameters(@Parameter(name = "id", description = "用户 id", required = true, in = ParameterIn.PATH))
     @DeleteMapping("/{id}")
     public BaseResponse<?> deleteUserById(@PathVariable Integer id) {
         boolean result = userService.deleteUserById(id);
@@ -66,6 +70,7 @@ public class UserController {
 
     @AuthCheck(code = PermissionConstant.USER_DELETE_BATCH)
     @Operation(summary = "批量删除用户（管理员）")
+    @Parameters(@Parameter(name = "userIds", description = "用户 id 数组", required = true))
     @DeleteMapping("/batch")
     public BaseResponse<?> deleteBatchUser(Integer... userIds) {
         int result = userService.deleteBatchUser(userIds);
@@ -86,6 +91,7 @@ public class UserController {
 
     @AuthCheck(code = PermissionConstant.USER_GET_ONE)
     @Operation(summary = "查询单个用户")
+    @Parameters(@Parameter(name = "id", description = "用户 id", required = true, in = ParameterIn.PATH))
     @GetMapping("/{id}")
     public BaseResponse<?> getUserById(@PathVariable Integer id) {
         UserVo userVo = userService.getUserById(id);
@@ -126,6 +132,11 @@ public class UserController {
 
     @AuthCheck(code = PermissionConstant.USER_UPDATE_MYSELF_PASSWORD)
     @Operation(summary = "修改个人密码")
+    @Parameters({
+            @Parameter(name = "originPassword", description = "原来的密码", required = true),
+            @Parameter(name = "newPassword", description = "新密码", required = true),
+            @Parameter(name = "againPassword", description = "再次确认新密码", required = true),
+    })
     @PutMapping("/changePassword")
     public BaseResponse<?> changePassword(String originPassword, String newPassword, String againPassword, HttpServletRequest request) throws JsonProcessingException {
         boolean result = userService.updatePassword(originPassword, newPassword, againPassword, request);
@@ -138,6 +149,7 @@ public class UserController {
 
     @AuthCheck(code = PermissionConstant.USER_RESET_PASSWORD)
     @Operation(summary = "重置用户密码（管理员）")
+    @Parameters(@Parameter(name = "id", description = "用户 id", required = true, in = ParameterIn.PATH))
     @PostMapping("/resetPassword/{id}")
     public BaseResponse<?> resetUserPassword(@PathVariable Integer id) {
         boolean result = userService.resetUserPassword(id);
@@ -157,6 +169,10 @@ public class UserController {
 
     @AuthCheck(code = PermissionConstant.USER_ADD_ROLE_TO_USER)
     @Operation(summary = "给用户添加角色")
+    @Parameters({
+            @Parameter(name = "userId", description = "用户 id", required = true),
+            @Parameter(name = "roleIds", description = "角色 id 数组", required = true),
+    })
     @PostMapping("/addRoleToUser")
     public BaseResponse<?> addRoleToUser(Integer userId,Integer... roleIds) {
         boolean result = userService.addRoleToUser(userId, roleIds);
@@ -169,6 +185,7 @@ public class UserController {
 
     @AuthCheck(code = PermissionConstant.USER_GET_ROLE_BY_USER)
     @Operation(summary = "查询用户的角色")
+    @Parameters(@Parameter(name = "userId", description = "用户 id", required = true, in = ParameterIn.PATH))
     @GetMapping("/getRoleByUser")
     public BaseResponse<?> getRoleByUser(Integer userId) {
         List<Role> result = userService.getRoleByUser(userId);
@@ -177,6 +194,7 @@ public class UserController {
 
     @AuthCheck(code = PermissionConstant.USER_GET_PERMISSION_BY_USER)
     @Operation(summary = "查询用户的权限")
+    @Parameters(@Parameter(name = "userId", description = "用户 id", required = true, in = ParameterIn.PATH))
     @GetMapping("/getPermissionByUser")
     public BaseResponse<?> getPermissionByUser(Integer userId) {
         List<Permissions> result = userService.getPermissionByUser(userId);

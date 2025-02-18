@@ -13,6 +13,9 @@ import com.qcx.property.domain.vo.message.MessageVo;
 import com.qcx.property.service.MessageService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -69,6 +72,7 @@ public class MessageController {
     }
 
     @DeleteMapping("/{id}")
+    @Parameters(@Parameter(name = "id", description = "消息通知 id", required = true, in = ParameterIn.PATH))
     @Operation(summary = "删除单个消息通知")
     public BaseResponse<?> deleteMessage(@PathVariable Integer id) {
         boolean result = messageService.deleteMessage(id);
@@ -80,6 +84,7 @@ public class MessageController {
     }
 
     @DeleteMapping("/batch")
+    @Parameters(@Parameter(name = "costTypeIds", description = "消息通知 id 数组", required = true))
     @Operation(summary = "批量删除消息通知")
     public BaseResponse<?> deleteBatchMessage(Integer... costTypeIds) {
         boolean result = messageService.deleteBatchMessage(costTypeIds);

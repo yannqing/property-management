@@ -10,6 +10,9 @@ import com.qcx.property.domain.model.BaseResponse;
 import com.qcx.property.service.CabinetService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +61,7 @@ public class CabinetController {
     }
 
     @DeleteMapping("/{id}")
+    @Parameters(@Parameter(name = "id", description = "外卖柜 id", required = true, in = ParameterIn.PATH))
     @Operation(summary = "删除单个外卖柜")
     public BaseResponse<?> deleteCabinet(@PathVariable Integer id) {
         boolean result = cabinetService.deleteCabinet(id);
@@ -69,6 +73,7 @@ public class CabinetController {
     }
 
     @DeleteMapping("/batch")
+    @Parameters(@Parameter(name = "cabinetIds", description = "外卖柜 id 数组", required = true))
     @Operation(summary = "批量删除外卖柜")
     public BaseResponse<?> deleteBatchCabinet(Integer... cabinetIds) {
         boolean result = cabinetService.deleteBatchCabinet(cabinetIds);

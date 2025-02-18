@@ -13,6 +13,9 @@ import com.qcx.property.domain.entity.Role;
 import com.qcx.property.service.RoleService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +51,7 @@ public class RoleController {
 
     @AuthCheck(code = PermissionConstant.ROLE_DELETE_ONE)
     @Operation(summary = "根据id删除角色")
+    @Parameters(@Parameter(name = "id", description = "角色 id", required = true, in = ParameterIn.PATH))
     @DeleteMapping("/{id}")
     public BaseResponse<?> deleteRole(@PathVariable Integer id) {
         boolean result = roleService.deleteRole(id);
@@ -60,6 +64,7 @@ public class RoleController {
 
     @AuthCheck(code = PermissionConstant.ROLE_DELETE_BATCH)
     @Operation(summary = "批量删除角色")
+    @Parameters(@Parameter(name = "roleIds", description = "角色 id 数组", required = true))
     @DeleteMapping("/batch")
     public BaseResponse<?> deleteRoles(Integer... roleIds) {
         int result = roleService.deleteBatchRoles(roleIds);
@@ -100,6 +105,7 @@ public class RoleController {
 
     @AuthCheck(code = PermissionConstant.ROLE_GET_PERMISSION)
     @Operation(summary = "根据角色id查询所有权限")
+    @Parameters(@Parameter(name = "id", description = "角色 id", required = true, in = ParameterIn.PATH))
     @GetMapping("/getByRole/{id}")
     public BaseResponse<?> getAllPermissionsByRoleId(@PathVariable Integer id) {
         List<Permissions> permissionsList = roleService.getAllPermissionsByRoleId(id);
@@ -108,6 +114,10 @@ public class RoleController {
 
     @AuthCheck(code = PermissionConstant.ROLE_ADD_PERMISSION_TO_ROLE)
     @Operation(summary = "给角色新增权限")
+    @Parameters({
+            @Parameter(name = "roleId", description = "角色 id", required = true),
+            @Parameter(name = "permissionIds", description = "权限 id 数组", required = true)
+    })
     @PostMapping("/addPermissionToRole")
     public BaseResponse<?> addPermissionToRole(Integer roleId, Integer... permissionIds) {
         boolean result = roleService.addPermissionToRole(roleId, permissionIds);

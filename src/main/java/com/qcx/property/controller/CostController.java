@@ -10,6 +10,9 @@ import com.qcx.property.domain.model.BaseResponse;
 import com.qcx.property.service.CostService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +61,7 @@ public class CostController {
     }
 
     @DeleteMapping("/{id}")
+    @Parameters(@Parameter(name = "id", description = "费用信息 id", required = true, in = ParameterIn.PATH))
     @Operation(summary = "删除单个费用信息")
     public BaseResponse<?> deleteCost(@PathVariable Integer id) {
         boolean result = costService.deleteCost(id);
@@ -69,6 +73,7 @@ public class CostController {
     }
 
     @DeleteMapping("/batch")
+    @Parameters(@Parameter(name = "costIds", description = "费用信息 id 数组", required = true))
     @Operation(summary = "批量删除费用信息")
     public BaseResponse<?> deleteBatchCost(Integer... costIds) {
         boolean result = costService.deleteBatchCost(costIds);

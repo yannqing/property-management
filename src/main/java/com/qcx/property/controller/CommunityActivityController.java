@@ -5,12 +5,14 @@ import com.qcx.property.common.Code;
 import com.qcx.property.domain.dto.communityActivity.AddCommunityActivityDto;
 import com.qcx.property.domain.dto.communityActivity.QueryCommunityActivityDto;
 import com.qcx.property.domain.dto.communityActivity.UpdateCommunityActivityDto;
-import com.qcx.property.domain.entity.CommunityActivity;
 import com.qcx.property.domain.model.BaseResponse;
 import com.qcx.property.domain.vo.communityActivity.CommunityActivityVo;
 import com.qcx.property.service.CommunityActivityService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +61,7 @@ public class CommunityActivityController {
     }
 
     @DeleteMapping("/{id}")
+    @Parameters(@Parameter(name = "id", description = "社区活动 id", required = true, in = ParameterIn.PATH))
     @Operation(summary = "删除单个社区活动")
     public BaseResponse<?> deleteCommunityActivity(@PathVariable Integer id) {
         boolean result = communityActivityService.deleteCommunityActivity(id);
@@ -70,6 +73,7 @@ public class CommunityActivityController {
     }
 
     @DeleteMapping("/batch")
+    @Parameters(@Parameter(name = "communityActivityIds", description = "社区活动 id 数组", required = true))
     @Operation(summary = "批量删除社区活动")
     public BaseResponse<?> deleteBatchCommunityActivity(Integer... communityActivityIds) {
         boolean result = communityActivityService.deleteBatchCommunityActivity(communityActivityIds);

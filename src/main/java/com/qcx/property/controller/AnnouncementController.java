@@ -10,6 +10,9 @@ import com.qcx.property.domain.vo.announcement.AnnouncementVo;
 import com.qcx.property.service.AnnouncementService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +61,7 @@ public class AnnouncementController {
     }
 
     @DeleteMapping("/{id}")
+    @Parameters(@Parameter(name = "id", description = "公告 id", required = true, in = ParameterIn.PATH))
     @Operation(summary = "删除单个公告")
     public BaseResponse<?> deleteAnnouncement(@PathVariable Integer id) {
         boolean result = announcementService.deleteAnnouncement(id);
@@ -69,6 +73,7 @@ public class AnnouncementController {
     }
 
     @DeleteMapping("/batch")
+    @Parameters(@Parameter(name = "announcementIds", description = "公告信息 id 数组", required = true))
     @Operation(summary = "批量删除公告信息")
     public BaseResponse<?> deleteBatchAnnouncement(Integer... announcementIds) {
         boolean result = announcementService.deleteBatchAnnouncement(announcementIds);

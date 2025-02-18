@@ -13,6 +13,9 @@ import com.qcx.property.domain.model.BaseResponse;
 import com.qcx.property.service.PermissionsService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +51,7 @@ public class PermissionController {
 
     @AuthCheck(code = PermissionConstant.PERMISSION_DELETE_ONE)
     @Operation(summary = "根据id删除权限")
+    @Parameters(@Parameter(name = "id", description = "权限 id", required = true, in = ParameterIn.PATH))
     @DeleteMapping("/{id}")
     public BaseResponse<?> delete(@PathVariable Integer id) {
         boolean result = permissionsService.deletePermission(id);
@@ -60,6 +64,7 @@ public class PermissionController {
 
     @AuthCheck(code = PermissionConstant.PERMISSION_DELETE_BATCH)
     @Operation(summary = "批量删除权限")
+    @Parameters(@Parameter(name = "permissionIds", description = "权限 id 数组", required = true))
     @DeleteMapping("/batch")
     public BaseResponse<?> deleteBatch(Integer... permissionIds) {
         int result = permissionsService.deleteBatchPermissions(permissionIds);

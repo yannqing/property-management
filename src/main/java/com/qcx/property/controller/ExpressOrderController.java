@@ -6,7 +6,6 @@ import com.qcx.property.common.Code;
 import com.qcx.property.domain.dto.ExpressOrder.AddExpressOrderDto;
 import com.qcx.property.domain.dto.ExpressOrder.QueryExpressOrderDto;
 import com.qcx.property.domain.dto.ExpressOrder.UpdateExpressOrderDto;
-import com.qcx.property.domain.entity.ExpressOrder;
 import com.qcx.property.domain.model.BaseResponse;
 import com.qcx.property.domain.model.PageRequest;
 import com.qcx.property.domain.vo.ExpressOrder.ExpressOrderAdminVo;
@@ -14,6 +13,9 @@ import com.qcx.property.domain.vo.ExpressOrder.ExpressOrderVo;
 import com.qcx.property.service.ExpressOrderService;
 import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -70,6 +72,7 @@ public class ExpressOrderController {
     }
 
     @DeleteMapping("/{id}")
+    @Parameters(@Parameter(name = "id", description = "快递订单 id", required = true, in = ParameterIn.PATH))
     @Operation(summary = "删除单个快递订单")
     public BaseResponse<?> deleteExpressOrder(@PathVariable Integer id) {
         boolean result = expressOrderService.deleteExpressOrder(id);
@@ -81,6 +84,7 @@ public class ExpressOrderController {
     }
 
     @DeleteMapping("/batch")
+    @Parameters(@Parameter(name = "expressOrderIds", description = "快递订单 id 数组", required = true))
     @Operation(summary = "批量删除快递订单")
     public BaseResponse<?> deleteBatchExpressOrder(Integer... expressOrderIds) {
         boolean result = expressOrderService.deleteBatchExpressOrder(expressOrderIds);
@@ -92,6 +96,7 @@ public class ExpressOrderController {
     }
 
     @PostMapping("/pickup")
+    @Parameters(@Parameter(name = "expressOderId", description = "快递订单 id", required = true))
     @Operation(summary = "代取快递")
     public BaseResponse<?> pickUpExpress(Integer expressOderId, HttpServletRequest request) throws JsonProcessingException {
         boolean result = expressOrderService.pickUpExpress(expressOderId, request);
@@ -103,6 +108,7 @@ public class ExpressOrderController {
     }
 
     @PostMapping("/confirm")
+    @Parameters(@Parameter(name = "expressOderId", description = "快递订单 id", required = true))
     @Operation(summary = "确认快递已收取")
     public BaseResponse<?> confirmExpress(Integer expressOderId, HttpServletRequest request) throws JsonProcessingException {
         boolean result = expressOrderService.confirmExpress(expressOderId, request);
