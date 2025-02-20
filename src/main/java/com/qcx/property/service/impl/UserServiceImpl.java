@@ -107,6 +107,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         User deleteUser = verifyUserId(id);
         String username = deleteUser.getUsername();
 
+        if (id.equals(0)) {
+            throw new BusinessException(ErrorType.SYSTEM_USER_ERROR);
+        }
+
         // 删除用户
         int result = this.baseMapper.deleteById(id);
         log.info("删除用户{}", username);
@@ -130,6 +134,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new BusinessException(ErrorType.USER_NOT_EXIST);
         }
 
+        users.forEach(user -> {
+            if (user.getUserId().equals(0)) {
+                throw new BusinessException(ErrorType.SYSTEM_USER_ERROR);
+            }
+        });
+
         // 删除用户，并记录日志
         int result = this.baseMapper.deleteBatchIds(userIdList);
         logDeletedUsers(users);
@@ -145,6 +155,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public UserVo getUserById(Integer id) {
         // 有效性检验
         User getUser = verifyUserId(id);
+
+        if (id.equals(0)) {
+            throw new BusinessException(ErrorType.SYSTEM_USER_ERROR);
+        }
 
         // 返回封装类 vo
         UserVo userVo = UserVo.objToVo(getUser);
@@ -170,6 +184,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String description = queryUserDto.getDescription();
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.ne("userId", 0);
         queryWrapper.eq(userId != null, "userId", userId);
         queryWrapper.like(StringUtils.isNotBlank(username), "username", username);
         queryWrapper.like(StringUtils.isNotBlank(description), "description", description);
@@ -205,6 +220,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         // 参数有效性判断
         verifyUserId(userId);
+
+        if (userId.equals(0)) {
+            throw new BusinessException(ErrorType.SYSTEM_USER_ERROR);
+        }
 
         // 更新用户信息
         User updateUser = UpdateUserDto.dtoToUser(updateUserDto);

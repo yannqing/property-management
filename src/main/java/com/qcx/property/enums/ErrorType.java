@@ -11,6 +11,7 @@ public enum ErrorType implements BaseExceptionInterface {
     // common 一般异常
     ARGS_NOT_NULL(50001, "参数不能为空，请重试！"),
     SYSTEM_ERROR(50000, "系统错误"),
+    SYSTEM_USER_ERROR(50002, "系统用户无法修改，请重试"),
 
     // 认证异常
     USERNAME_ALREADY_EXIST(60001, "用户名已存在，请重试！"),
