@@ -59,11 +59,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Resource
     private PermissionsMapper permissionsMapper;
 
-    /**
-     * 管理员新增用户
-     * @param addUserDto
-     * @return
-     */
+    @Resource
+    private UserUserMapper userUserMapper;
+
     @Override
     public boolean addUser(AddUserDto addUserDto) {
         String username = Optional.ofNullable(addUserDto.getUsername())
@@ -103,11 +101,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return result > 0;
     }
 
-    /**
-     * 管理员删除单个用户
-     * @param id
-     * @return
-     */
     @Override
     public boolean deleteUserById(Integer id) {
         // 查看用户是否存在
@@ -123,11 +116,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return result > 0;
     }
 
-    /**
-     * 批量删除用户
-     * @param userIds
-     * @return
-     */
     @Override
     public int deleteBatchUser(Integer... userIds) {
         // 判空
@@ -153,11 +141,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return result;
     }
 
-    /**
-     * 查询单个用户
-     * @param id
-     * @return
-     */
     @Override
     public UserVo getUserById(Integer id) {
         // 有效性检验
@@ -169,11 +152,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return userVo;
     }
 
-    /**
-     * 查询所有用户
-     * @param queryUserDto
-     * @return
-     */
     @Override
     public Page<UserVo> getAll(QueryUserDto queryUserDto) {
         // 判空
@@ -215,11 +193,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return new Page<UserVo>(page.getCurrent(), page.getSize(), page.getTotal()).setRecords(userVoList);
     }
 
-    /**
-     * 管理员修改用户信息
-     * @param updateUserDto
-     * @return
-     */
     @Override
     public boolean updateUserByAdmin(UpdateUserDto updateUserDto) {
         // 参数判空
@@ -233,7 +206,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 参数有效性判断
         verifyUserId(userId);
 
-        // TODO 打断点调试，查看内容
         // 更新用户信息
         User updateUser = UpdateUserDto.dtoToUser(updateUserDto);
         boolean updateResult = this.updateById(updateUser);
@@ -242,22 +214,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 修改用户角色
         if (updateUserDto.getRoleIds() != null && !updateUserDto.getRoleIds().isEmpty()) {
             roleUserService.remove(new QueryWrapper<RoleUser>().eq("uid", userId));
-            roleIds.forEach(roleId -> {
-                roleUserService.addRole(userId, roleId);
-            });
+            roleIds.forEach(roleId -> roleUserService.addRole(userId, roleId));
             log.info("更新用户（id：{}）的角色信息{}", userId, roleIds.stream().map(String::valueOf));
         }
 
         return updateResult;
     }
 
-    /**
-     * 更新个人信息
-     * @param updateMyInfoDto
-     * @param request
-     * @return
-     * @throws JsonProcessingException
-     */
     @Override
     public boolean updateMyInfo(UpdateMyInfoDto updateMyInfoDto, HttpServletRequest request) throws JsonProcessingException {
         User loginUser = verifyToken(request);
@@ -271,14 +234,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return updateResult;
     }
 
-    /**
-     * 修改个人密码
-     * @param originPassword
-     * @param newPassword
-     * @param againPassword
-     * @param request
-     * @return
-     */
     @Override
     public boolean updatePassword(String originPassword, String newPassword, String againPassword, HttpServletRequest request) throws JsonProcessingException {
         User loginUser = verifyToken(request);
@@ -323,11 +278,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return updateResult;
     }
 
-    /**
-     * 管理员重置用户密码
-     * @param id
-     * @return
-     */
     @Override
     public boolean resetUserPassword(Integer id) {
         // 有效性检验
@@ -341,12 +291,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return updateResult;
     }
 
-    /**
-     * 给用户添加角色
-     * @param userId
-     * @param roleIds
-     * @return
-     */
     @Override
     public boolean addRoleToUser(Integer userId, Integer... roleIds) {
         verifyUserId(userId);
@@ -374,11 +318,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return true;
     }
 
-    /**
-     * 查询用户角色
-     * @param userId 要查询的用户id
-     * @return
-     */
     @Override
     public List<Role> getRoleByUser(Integer userId) {
         verifyUserId(userId);
@@ -396,11 +335,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return roles;
     }
 
-    /**
-     * 查询用户的权限
-     * @param userId
-     * @return
-     */
     @Override
     public List<Permissions> getPermissionByUser(Integer userId) {
         verifyUserId(userId);
@@ -425,12 +359,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return permissionsList;
     }
 
-    /**
-     * 获取个人信息
-     * @param request
-     * @return
-     * @throws JsonProcessingException
-     */
     @Override
     public MySelfInfoVo getMyselfInfo(HttpServletRequest request) throws JsonProcessingException {
         // verifyToken 函数中自带盘空
@@ -447,6 +375,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return mySelfInfoVo;
     }
 
+    @Override
+    public List<UserVo> getMyUsers(HttpServletRequest request) throws JsonProcessingException {
+        User loginUser = verifyToken(request);
+        List<UserUser> myUserUsers = userUserMapper.selectList(new QueryWrapper<UserUser>().eq("pid", loginUser.getUserId()));
+        List<User> userList = this.baseMapper.selectBatchIds(myUserUsers.stream().map(UserUser::getUid).collect(Collectors.toList()));
+        List<UserVo> userVoList = userList.stream().map(user -> {
+            UserVo userVo = UserVo.objToVo(user);
+            userVo.setRoles(getRoleByUser(user.getUserId()));
+            return userVo;
+        }).toList();
+        log.info("查询我的租客，业主 id：{}", loginUser.getUserId());
+
+        return userVoList;
+    }
+
+    @Override
+    public boolean addUserToOwner(Integer ownerId, Integer... userIds) {
+        // 校验参数
+        verifyUserId(ownerId);
+        if (userIds == null || userIds.length == 0) {
+            throw new BusinessException(ErrorType.ARGS_NOT_NULL);
+        }
+        List<Integer> userIdList = Arrays.stream(userIds).peek(this::verifyUserId).toList();
+
+        // 给业主添加租客
+        for (Integer userId : userIdList) {
+            UserUser userUser = new UserUser();
+            userUser.setPid(ownerId);
+            userUser.setUid(userId);
+            userUserMapper.insert(userUser);
+        }
+
+        return true;
+    }
+
     // 辅助方法：批量删除用户，日志记录
     private void logDeletedUsers(List<User> users) {
         String usernames = users.stream()
@@ -455,11 +418,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         log.info("批量删除用户: {}", usernames);
     }
 
-    /**
-     * 验证用户 id 的有效性
-     * @param userId
-     * @return
-     */
     public User verifyUserId(Integer userId) {
         Optional.ofNullable(userId)
                 .orElseThrow(() -> new BusinessException(ErrorType.ARGS_NOT_NULL));
@@ -470,12 +428,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return verifyUser;
     }
 
-    /**
-     * 验证 token
-     * @param request
-     * @return
-     * @throws JsonProcessingException
-     */
     public User verifyToken(HttpServletRequest request) throws JsonProcessingException {
         String token = request.getHeader("token");
         if (StringUtils.isBlank(token)) {

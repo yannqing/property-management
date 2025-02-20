@@ -208,4 +208,27 @@ public class UserController {
         MySelfInfoVo result = userService.getMyselfInfo(request);
         return ResultUtils.success(Code.SUCCESS, result, "获取个人信息成功");
     }
+
+    // TODO 权限
+    @Operation(summary = "查看我的租客（仅限业主）")
+    @GetMapping("/tenants")
+    public BaseResponse<?> getMyUsers(HttpServletRequest request) throws JsonProcessingException {
+        List<UserVo> result = userService.getMyUsers(request);
+
+        return ResultUtils.success(Code.SUCCESS, result, "查看我的租客成功");
+    }
+
+    @Operation(summary = "给业主添加租客（管理员）")
+    @Parameters({
+            @Parameter(name = "ownerId", description = "业主 id", required = true),
+            @Parameter(name = "userIds", description = "租客 id 数组", required = true)
+    })
+    @GetMapping("/addToOwner")
+    public BaseResponse<?> addUserToOwner(Integer ownerId, Integer... userIds) {
+        boolean result = userService.addUserToOwner(ownerId, userIds);
+
+        return ResultUtils.success(Code.SUCCESS, result, "给业主添加租客成功");
+    }
+
+
 }
