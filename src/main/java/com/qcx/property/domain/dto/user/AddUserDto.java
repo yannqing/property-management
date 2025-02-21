@@ -72,6 +72,12 @@ public class AddUserDto implements Serializable {
     private String avatar;
 
     /**
+     * 角色 id
+     */
+    @Schema(description = "角色 id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Integer roleId;
+
+    /**
      * 昵称
      */
     @Schema(description = "昵称", requiredMode = Schema.RequiredMode.REQUIRED)

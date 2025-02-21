@@ -96,7 +96,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         log.info("管理员新增用户{}成功", username);
 
         // 给用户添加角色
-        roleUserService.addRole(username, RoleType.USER);
+        if (addUserDto.getRoleId() != null) {
+            roleUserService.addRole(username, addUserDto.getRoleId());
+        } else {
+            roleUserService.addRole(username, RoleType.USER);
+        }
         log.info("用户{}添加角色{}成功", addUser.getUsername(), RoleType.USER.getRoleCode());
         return result > 0;
     }

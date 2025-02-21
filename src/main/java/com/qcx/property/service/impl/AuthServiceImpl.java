@@ -72,10 +72,13 @@ public class AuthServiceImpl implements AuthService {
         int result = userMapper.insert(registerUser);
         log.info("用户user{}注册成功", registerUser.getUsername());
 
-        // 给用户添加角色
+        // 给用户添加角色：不能添加管理员
         if (registerDto.getRoleId() == null) {
             roleUserService.addRole(username, RoleType.USER);
         } else {
+            if (registerDto.getRoleId().equals(RoleType.ADMIN.getRoleId())) {
+                throw new BusinessException(ErrorType.SYSTEM_ERROR);
+            }
             roleUserService.addRole(username, registerDto.getRoleId());
         }
 
