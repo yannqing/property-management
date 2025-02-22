@@ -28,6 +28,8 @@ public class UpdateUserDto {
     private String nickName;
     @Schema(description = "地址", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String address;
+    @Schema(description = "年龄", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Integer age;
     @Schema(description = "电话", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String phone;
     @Schema(description = "邮箱", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
