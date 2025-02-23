@@ -182,6 +182,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String phone = queryUserDto.getPhone();
         String email = queryUserDto.getEmail();
         Integer age = queryUserDto.getAge();
+        Integer roleId = queryUserDto.getRoleId();
         String signature = queryUserDto.getSignature();
         Integer sex = queryUserDto.getSex();
         String nickName = queryUserDto.getNickName();
@@ -199,6 +200,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         queryWrapper.like(StringUtils.isNotBlank(signature), "signature", signature);
         queryWrapper.eq(sex != null, "sex", sex);
         queryWrapper.like(StringUtils.isNotBlank(nickName), "nickName", nickName);
+        if (roleId != null) {
+            List<RoleUser> roleUserList = roleUserService.getBaseMapper().selectList(new QueryWrapper<RoleUser>().eq("rid", roleId));
+            List<Integer> userIdList = roleUserList.stream().map(RoleUser::getUid).toList();
+            // 添加 userIdList 作为查询条件
+            queryWrapper.in(!userIdList.isEmpty(), "userId", userIdList);
+        }
 
         // 将 user 转为 userVo
         Page<User> page = this.page(new Page<>(queryUserDto.getCurrent(), queryUserDto.getPageSize()), queryWrapper);
