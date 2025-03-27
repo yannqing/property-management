@@ -29,11 +29,11 @@ spring:
   # Spring AI 相关配置
   ai:
     openai:
-      api-key: sk-uySIWmAXSaPlG24trZauwFxHqcTiJ3R8S3feqXUpcNMd2qb7
-      base-url: https://api.lkeap.cloud.tencent.com/v1
+      api-key: xxxx
+      base-url: xxx
       chat:
         options:
-          model: deepseek-v3
+          model: xxx
 server:
   port: 8080
 # knife4j 接口文档
