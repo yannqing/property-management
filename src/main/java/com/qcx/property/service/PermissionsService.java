@@ -26,4 +26,11 @@ public interface PermissionsService extends IService<Permissions> {
     Page<Permissions> getAllPermissions(QueryPermissionsDto queryPermissionsDto);
 
     boolean updatePermissions(UpdatePermissionsDto updatePermissionsDto);
+
+    /**
+     * 根据编码获取权限
+     * @param permissionCode 权限编码
+     * @return 权限
+     */
+    Permissions getPermissionByCode(String permissionCode);
 }

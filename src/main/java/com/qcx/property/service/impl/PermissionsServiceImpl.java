@@ -175,6 +175,16 @@ public class PermissionsServiceImpl extends ServiceImpl<PermissionsMapper, Permi
         return updateResult;
     }
 
+    @Override
+    public Permissions getPermissionByCode(String permissionCode) {
+        if (StringUtils.isBlank(permissionCode)) {
+            throw new BusinessException(ErrorType.ARGS_NOT_NULL);
+        }
+
+        // TODO 此处可以做 redis 缓存处理
+        return this.getOne(new QueryWrapper<Permissions>().eq("code", permissionCode));
+    }
+
     /**
      * 验证权限 id 的有效性
      * @param permissionsId 权限 id

@@ -51,6 +51,8 @@ public enum ErrorType implements BaseExceptionInterface {
     COMMUNITY_ACTIVITY_TYPE_NOT_NULL(60031, "社区活动类型不能为空，请重试"),
     COMMUNITY_ACTIVITY_NOT_IN_REGISTRATION(60028, "活动不在报名时间段，请重试"),
     COMMUNITY_ACTIVITY_NO_ENOUGH_PLACE(60029, "活动没有足够的名额，请重试"),
+    ROOM_NOT_EXIST(60032, "房间不存在，请重试"),
+    ROOM_ALREADY_EXIST(60033, "房间已存在，请重试"),
 
 
     ACTIVITY_REGISTRATION_NOT_EXIST(60025, "活动报名不存在，请重试"),

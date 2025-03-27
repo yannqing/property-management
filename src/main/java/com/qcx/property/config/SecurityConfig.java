@@ -6,7 +6,8 @@ import com.qcx.property.security.handler.MyLoginFailureHandler;
 import com.qcx.property.security.handler.MyLoginSuccessHandler;
 import com.qcx.property.security.handler.MyLogoutSuccessHandler;
 import com.qcx.property.utils.RedisCache;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -23,8 +24,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    RedisCache redisCache;
+    @Resource
+    private RedisCache redisCache;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,6 +35,7 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers(Constant.anonymousMatch)
                 .permitAll()
+                .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
                 .anyRequest()
                 .authenticated()
         );
@@ -68,7 +70,7 @@ public class SecurityConfig {
     }
     /**
      * 对密码进行BCrypt加密
-     * @return
+     * @return 返回加密器
      */
     @Bean
     public PasswordEncoder passwordEncoder(){

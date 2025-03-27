@@ -14,6 +14,14 @@ pipeline {
                 git branch: 'master', url: GIT_URL
             }
         }
+        stage('替换配置文件') {
+            steps {
+                script {
+                    // 替换 dev.yml 文件
+                    sh 'cp /var/jenkins_home/workspace/property-resources/application-dev.yml ./src/main/resources/application-dev.yml'
+                }
+            }
+        }
         stage('编译构建') {
             steps {
                 sh "mvn clean package"
@@ -54,7 +62,7 @@ pipeline {
             steps {
                 // 基于 Dockerfile 进行构建
                 sh "docker build -f Dockerfile.dockerfile -t ${APP_IMAGE} ."
-                sh "docker run -it --name ${APP_NAME} --network mynetwork -v /yannqing/${APP_NAME}:/yannqing/${APP_NAME} -p ${APP_PORT} -d ${APP_IMAGE}"
+                sh "docker run -it --name ${APP_NAME} --network mynetwork --restart=on-failure -v /yannqing/${APP_NAME}:/yannqing/${APP_NAME} -p ${APP_PORT} -d ${APP_IMAGE}"
             }
         }
     }

@@ -21,6 +21,14 @@ spring:
           max-idle: 8
           min-idle: 0
       timeout: 0
+  # Spring AI 相关配置
+  ai:
+    openai:
+      api-key: xxxx
+      base-url: xxxx
+      chat:
+        options:
+          model: xxxx
 server:
   port: 8080
 knife4j:
