@@ -32,7 +32,7 @@ public class Room implements Serializable {
      * 房间号
      */
     @TableField(value = "num")
-    private Integer num;
+    private String num;
 
     /**
      * 租客

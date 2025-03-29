@@ -1,6 +1,7 @@
 package com.qcx.property.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -163,6 +164,22 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         log.info("批量删除消息通知");
 
         return deleteResult > 0;
+    }
+
+    @Override
+    public boolean readMessage(Integer id) {
+        if (id == null) {
+            throw new BusinessException(ErrorType.ARGS_NOT_NULL);
+        }
+        Message message = this.getById(id);
+        if (message == null) {
+            throw new BusinessException(ErrorType.MESSAGE_NOT_EXIST);
+        }
+
+        // 已读
+        boolean result = this.update(new UpdateWrapper<Message>().eq("id", id).set("status", 1));
+        log.info("修改消息状态为已读");
+        return result;
     }
 }
 

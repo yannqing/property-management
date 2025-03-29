@@ -39,7 +39,7 @@ public class QueryRoomDto extends PageRequest implements Serializable {
      * 房间号
      */
     @Schema(description = "房间号", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Integer num;
+    private String num;
 
     /**
      * 租客

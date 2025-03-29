@@ -1,6 +1,7 @@
 package com.qcx.property.domain.dto.auth;
 
 import com.qcx.property.domain.entity.User;
+import com.qcx.property.domain.model.RoomModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
@@ -88,6 +89,14 @@ public class RegisterDto implements Serializable {
      */
     @Schema(description = "备注", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String description;
+
+    /**
+     * 房间信息
+     */
+    @Schema(description = "房间信息（业主注册不能为空）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private RoomModel roomModel;
+
+
 
     @Serial
     private static final long serialVersionUID = 1L;

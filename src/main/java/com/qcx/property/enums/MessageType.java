@@ -12,6 +12,8 @@ public enum MessageType {
     EMAIL(3, "邮件通知"),
     TAKEOUT(4, "外卖通知"),
     COMMUNITY_ACTIVITY(5, "社区活动通知"),
+    CHECK(6, "审批通知"),
+    SYSTEM(7, "系统通知")
     ;
 
     private final int id;

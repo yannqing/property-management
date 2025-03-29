@@ -61,4 +61,11 @@ public interface MessageService extends IService<Message> {
      * @return 返回删除结果
      */
     boolean deleteBatchMessage(Integer[] messageIds);
+
+    /**
+     * 修改消息状态为已读
+     * @param id 修改的消息 id
+     * @return 返回修改结果
+     */
+    boolean readMessage(Integer id);
 }

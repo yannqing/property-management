@@ -1,6 +1,7 @@
 package com.qcx.property.domain.dto.room;
 
 import com.qcx.property.domain.entity.Room;
+import com.qcx.property.domain.model.RoomModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +30,7 @@ public class AddRoomDto implements Serializable {
      * 房间号
      */
     @Schema(description = "房间号", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Integer num;
+    private String num;
 
     /**
      * 租客
@@ -56,10 +57,10 @@ public class AddRoomDto implements Serializable {
     private Integer status;
 
     /**
-     * 备注
+     * 其他
      */
-    @Schema(description = "备注", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String description;
+    @Schema(description = "其他", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private RoomModel roomModel;
 
     @Serial
     private static final long serialVersionUID = 1L;

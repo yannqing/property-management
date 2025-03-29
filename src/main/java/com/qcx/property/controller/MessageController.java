@@ -60,6 +60,17 @@ public class MessageController {
         }
     }
 
+    @PostMapping("/read")
+    @Operation(summary = "修改消息状态为已读")
+    public BaseResponse<?> readMessage(Integer id) {
+        boolean result = messageService.readMessage(id);
+        if (result) {
+            return ResultUtils.success(Code.SUCCESS, null, "修改消息通知成功！");
+        } else {
+            return ResultUtils.failure(Code.FAILURE, null, "修改消息通知失败！");
+        }
+    }
+
     @Operation(summary = "添加新消息通知")
     @PostMapping
     public BaseResponse<?> addMessage(AddMessageDto addMessageDto) {
