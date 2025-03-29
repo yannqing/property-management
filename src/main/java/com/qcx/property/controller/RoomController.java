@@ -39,7 +39,7 @@ public class RoomController {
 
     @AuthCheck(code = "ROOM_GET_ALL_BY_ADMIN")
     @Operation(summary = "查询所有房间(管理员）")
-    @GetMapping
+    @GetMapping("/admin")
     public BaseResponse<?> getAllRooms(QueryRoomDto queryRoomDto) {
         Page<RoomVo> costList = roomService.getAllRooms(queryRoomDto);
         return ResultUtils.success(Code.SUCCESS, costList, "查询全部房间成功！");
@@ -47,7 +47,7 @@ public class RoomController {
 
     @AuthCheck(code = "ROOM_GET_ALL_BY_OWNER")
     @Operation(summary = "查询所有房间（业主）")
-    @GetMapping
+    @GetMapping("/owner")
     public BaseResponse<?> getAllRoomsByOwner(QueryRoomDto queryRoomDto, HttpServletRequest request) throws JsonProcessingException {
         Page<RoomVo> costList = roomService.getAllRoomsByOwner(queryRoomDto, request);
         return ResultUtils.success(Code.SUCCESS, costList, "查询全部房间成功！");
@@ -55,7 +55,7 @@ public class RoomController {
 
     @AuthCheck(code = "ROOM_GET_ALL_BY_USER")
     @Operation(summary = "查询所有房间（租客）")
-    @GetMapping
+    @GetMapping("/user")
     public BaseResponse<?> getAllRoomsByUser(QueryRoomDto queryRoomDto, HttpServletRequest request) throws JsonProcessingException {
         Page<RoomVo> costList = roomService.getAllRoomsByUser(queryRoomDto, request);
         return ResultUtils.success(Code.SUCCESS, costList, "查询全部房间成功！");
