@@ -25,6 +25,7 @@ public class Constant {
        "/webjars/**",
             "/v3/**",
 //            "/test/**",
+            "/file/download/**",
             "/rsa/**"
     };
 
