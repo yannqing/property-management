@@ -10,9 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @description: 认证
@@ -30,7 +28,7 @@ public class AuthController {
 
     @Operation(summary = "注册")
     @PostMapping("/register")
-    public BaseResponse<?> register(RegisterDto registerDto) {
+    public BaseResponse<?> register(@RequestBody RegisterDto registerDto) {
         boolean result = authService.register(registerDto);
         if (result) {
             return ResultUtils.success(String.format("用户%s注册成功", registerDto.getUsername()));

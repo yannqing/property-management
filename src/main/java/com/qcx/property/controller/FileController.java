@@ -7,6 +7,7 @@ import com.qcx.property.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,9 @@ public class FileController {
 
     @Resource
     private FileService fileService;
+
+    @Value("${project.upload-url}")
+    private String uploadPath;
 
     /**
      * 上传图片接口
@@ -52,7 +56,7 @@ public class FileController {
     @GetMapping("/download/{filename}")
     public ResponseEntity<FileSystemResource> downloadImage(@PathVariable("filename") String filename) {
 
-        String imagePath = "./images/" + filename; // 图片的本地路径
+        String imagePath = uploadPath + filename; // 图片的本地路径
 
         return getFileSystemResourceResponseEntity(filename, imagePath);
     }

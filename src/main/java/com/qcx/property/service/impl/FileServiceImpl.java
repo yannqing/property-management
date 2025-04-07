@@ -19,9 +19,11 @@ import java.util.UUID;
 @Service
 public class FileServiceImpl implements FileService {
 
+    @Value("${project.upload-url}")
+    private String uploadPath;
+
     @Override
     public String uploadAvatar(MultipartFile image) throws IOException {
-        String uploadUrl = "./images/";
         //参数校验
         if (image == null) {
             throw new BusinessException(ErrorType.ARGS_NOT_NULL);
@@ -33,15 +35,15 @@ public class FileServiceImpl implements FileService {
         }
         UUID uuid = UUID.randomUUID();
         String newFilename = replaceFilename(fileName, uuid.toString());
-        Path path = Paths.get(uploadUrl + newFilename);
+        Path path = Paths.get(uploadPath + newFilename);
         // 判断 images 文件夹是否存在，不存在则创建
-        File file = new File(uploadUrl);
+        File file = new File(uploadPath);
         if (!file.exists()) {
             boolean created = file.mkdir();
             if (created) {
-                log.info("文件夹{}创建成功", uploadUrl);
+                log.info("文件夹{}创建成功", uploadPath);
             } else {
-                log.info("文件夹{}创建失败", uploadUrl);
+                log.info("文件夹{}创建失败", uploadPath);
             }
         }
         //存储到服务器
