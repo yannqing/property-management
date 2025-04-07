@@ -31,6 +31,8 @@ spring:
           model: xxxx
 server:
   port: 8080
+project:
+  upload-url: ./images/
 knife4j:
   enable: true
   setting:
