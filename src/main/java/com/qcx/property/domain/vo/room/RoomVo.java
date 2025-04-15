@@ -28,7 +28,7 @@ public class RoomVo {
     /**
      * 房间号
      */
-    private Integer num;
+    private String num;
 
     /**
      * 租客
