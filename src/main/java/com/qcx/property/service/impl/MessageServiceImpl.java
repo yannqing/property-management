@@ -1,15 +1,21 @@
 package com.qcx.property.service.impl;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qcx.property.domain.dto.message.AddMessageDto;
+import com.qcx.property.domain.dto.message.QueryApprovalDto;
 import com.qcx.property.domain.dto.message.QueryMessageDto;
 import com.qcx.property.domain.dto.message.UpdateMessageDto;
 import com.qcx.property.domain.entity.Message;
 import com.qcx.property.domain.entity.User;
+import com.qcx.property.domain.model.ApprovalModel;
+import com.qcx.property.domain.model.MessageContent;
 import com.qcx.property.domain.model.PageRequest;
 import com.qcx.property.domain.vo.message.MessageVo;
 import com.qcx.property.domain.vo.user.UserVo;
@@ -23,12 +29,12 @@ import com.qcx.property.utils.JwtUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
 * @author 67121
@@ -180,6 +186,83 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         boolean result = this.update(new UpdateWrapper<Message>().eq("id", id).set("status", 1));
         log.info("修改消息状态为已读");
         return result;
+    }
+
+    @Override
+    public Page<ApprovalModel> getApprovals(QueryApprovalDto queryApprovalDto) {
+
+        Integer status = queryApprovalDto.getStatus();
+        String nickname = queryApprovalDto.getNickname();
+        String username = queryApprovalDto.getUsername();
+        int current = queryApprovalDto.getCurrent();
+        int pageSize = queryApprovalDto.getPageSize();
+
+
+        LambdaQueryWrapper<Message> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Message::getType, MessageType.CHECK.getId());
+
+        queryWrapper.eq(status != null, Message::getStatus, status);
+
+
+        List<Message> messages = this.getBaseMapper().selectList(queryWrapper);
+        List<ApprovalModel> approvalModels = new ArrayList<>();
+
+        if (!nickname.isEmpty() || !username.isEmpty()) {
+            messages.forEach(message -> {
+                String content = message.getContent();
+                if (content != null && !content.isEmpty()) {
+                    MessageContent<User> messageContent = JSON.parseObject(content, new TypeReference<>() {
+                    });
+                    User user = messageContent.getData();
+                    if (user == null) {
+                        throw new BusinessException(ErrorType.SYSTEM_ERROR);
+                    } else {
+                        // 查询条件不为空 符合要求的 user
+                        if ((!nickname.isEmpty() && user.getNickName().equals(nickname)) || (!username.isEmpty() && user.getUsername().equals(username))) {
+                            ApprovalModel approvalModel = new ApprovalModel();
+                            approvalModel.setUser(user);
+                            approvalModel.setRoomModel(messageContent.getRoomModel());
+                            approvalModel.setNotify(messageContent.getNotify());
+                            approvalModels.add(approvalModel);
+                        }
+                    }
+                } else {
+                    throw new BusinessException(ErrorType.SYSTEM_ERROR);
+                }
+            });
+        } else {
+            // 无查询条件，直接获取
+            messages.forEach(message -> {
+                String content = message.getContent();
+                if (content != null && !content.isEmpty()) {
+                    MessageContent<User> messageContent = JSON.parseObject(content, new TypeReference<>() {
+                    });
+                    User user = messageContent.getData();
+                    if (user == null) {
+                        throw new BusinessException(ErrorType.SYSTEM_ERROR);
+                    } else {
+                        ApprovalModel approvalModel = new ApprovalModel();
+                        approvalModel.setUser(user);
+                        approvalModel.setRoomModel(messageContent.getRoomModel());
+                        approvalModel.setNotify(messageContent.getNotify());
+                        approvalModels.add(approvalModel);
+                    }
+                } else {
+                    throw new BusinessException(ErrorType.SYSTEM_ERROR);
+                }
+            });
+        }
+
+        // 计算起始索引
+        int start = (current - 1) * pageSize;
+        // 计算结束索引(不包含)
+        int end = Math.min(start + pageSize, approvalModels.size());
+
+        List<ApprovalModel> approvalModelList = IntStream.range(start, end)
+                .mapToObj(approvalModels::get)
+                .toList();
+
+        return new Page<ApprovalModel>(current, pageSize, approvalModels.size()).setRecords(approvalModelList);
     }
 }
 

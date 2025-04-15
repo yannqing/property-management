@@ -1,5 +1,6 @@
 package com.qcx.property.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,6 +10,7 @@ import com.qcx.property.domain.dto.communityActivity.UpdateCommunityActivityDto;
 import com.qcx.property.domain.dto.message.AddMessageDto;
 import com.qcx.property.domain.entity.ActivityRegistration;
 import com.qcx.property.domain.entity.CommunityActivity;
+import com.qcx.property.domain.model.MessageContent;
 import com.qcx.property.domain.vo.communityActivity.CommunityActivityVo;
 import com.qcx.property.domain.vo.user.UserVo;
 import com.qcx.property.enums.ErrorType;
@@ -125,7 +127,9 @@ public class CommunityActivityServiceImpl extends ServiceImpl<CommunityActivityM
         activityRegistrationList.forEach(activityRegistration -> {
             AddMessageDto addMessageDto = new AddMessageDto();
             addMessageDto.setType(MessageType.COMMUNITY_ACTIVITY.getId());
-            addMessageDto.setContent("您参与的活动信息有所调整，请及时查看");
+            MessageContent<?> messageContent = new MessageContent<>();
+            messageContent.setNotify("您参与的活动信息有所调整，请及时查看");
+            addMessageDto.setContent(JSON.toJSONString(messageContent));
             addMessageDto.setReceiveUser(activityRegistration.getUserId());
             messageService.addMessage(addMessageDto);
         });

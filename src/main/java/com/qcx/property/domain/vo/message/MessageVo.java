@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.qcx.property.domain.entity.Message;
 import com.qcx.property.domain.entity.User;
+import com.qcx.property.domain.model.RoomModel;
 import com.qcx.property.domain.vo.user.UserVo;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +22,7 @@ import java.util.Date;
  **/
 @Data
 public class MessageVo implements Serializable {
+    private Integer id;
     /**
      * 消息类型
      */

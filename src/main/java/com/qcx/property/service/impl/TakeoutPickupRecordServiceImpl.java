@@ -1,5 +1,6 @@
 package com.qcx.property.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -11,6 +12,7 @@ import com.qcx.property.domain.dto.takeouts.QueryTakeoutsDto;
 import com.qcx.property.domain.dto.takeouts.UpdateTakeoutsByUserDto;
 import com.qcx.property.domain.dto.takeouts.UpdateTakeoutsDto;
 import com.qcx.property.domain.entity.*;
+import com.qcx.property.domain.model.MessageContent;
 import com.qcx.property.domain.vo.takeoutsRecord.TakeoutsVo;
 import com.qcx.property.domain.vo.user.UserVo;
 import com.qcx.property.enums.ErrorType;
@@ -182,7 +184,9 @@ public class TakeoutPickupRecordServiceImpl extends ServiceImpl<TakeoutPickupRec
         // 发送通知
         AddMessageDto addMessageDto = new AddMessageDto();
         addMessageDto.setType(MessageType.TAKEOUT.getId());
-        addMessageDto.setContent("您的外卖下单成功，等待骑手接单。");
+        MessageContent<?> addMessageContent = new MessageContent<>();
+        addMessageContent.setNotify("您的外卖下单成功，等待骑手接单。");
+        addMessageDto.setContent(JSON.toJSONString(addMessageContent));
         addMessageDto.setReceiveUser(addTakeoutsDto.getUserId());
 
         boolean sendMessageResult = messageService.addMessage(addMessageDto);
@@ -259,7 +263,9 @@ public class TakeoutPickupRecordServiceImpl extends ServiceImpl<TakeoutPickupRec
         // 消息通知
         AddMessageDto addMessageDto = new AddMessageDto();
         addMessageDto.setType(MessageType.TAKEOUT.getId());
-        addMessageDto.setContent("您的外卖已被骑手接单，请耐心等候");
+        MessageContent<?> addMessageContent = new MessageContent<>();
+        addMessageContent.setNotify("您的外卖已被骑手接单，请耐心等候");
+        addMessageDto.setContent(JSON.toJSONString(addMessageContent));
         addMessageDto.setReceiveUser(takeoutsOrder.getUserId());
         boolean sendMessageResult = messageService.addMessage(addMessageDto);
         if (sendMessageResult) {
@@ -317,7 +323,10 @@ public class TakeoutPickupRecordServiceImpl extends ServiceImpl<TakeoutPickupRec
         // 发送消息
         AddMessageDto addMessageDto = new AddMessageDto();
         addMessageDto.setType(MessageType.TAKEOUT.getId());
-        addMessageDto.setContent("您的外卖已送达，外卖柜编号：" + cabinet.getCode() + " 请及时取走!");
+        MessageContent<Cabinet> addMessageContent = new MessageContent<>();
+        addMessageContent.setData(cabinet);
+        addMessageContent.setNotify("您的外卖已送达，外卖柜编号：" + cabinet.getCode() + " 请及时取走!");
+        addMessageDto.setContent(JSON.toJSONString(addMessageContent));
         addMessageDto.setReceiveUser(takeoutsOrder.getUserId());
         boolean sendMessageResult = messageService.addMessage(addMessageDto);
         if (sendMessageResult) {
@@ -359,7 +368,9 @@ public class TakeoutPickupRecordServiceImpl extends ServiceImpl<TakeoutPickupRec
         // 发送消息
         AddMessageDto addMessageDto = new AddMessageDto();
         addMessageDto.setType(MessageType.TAKEOUT.getId());
-        addMessageDto.setContent("您的外卖开始派送，请耐心等候");
+        MessageContent<?> messageContent = new MessageContent<>();
+        messageContent.setNotify("您的外卖开始派送，请耐心等候");
+        addMessageDto.setContent(JSON.toJSONString(messageContent));
         addMessageDto.setReceiveUser(takeoutsOrder.getUserId());
         boolean sendMessageResult = messageService.addMessage(addMessageDto);
         if (sendMessageResult) {
@@ -408,7 +419,9 @@ public class TakeoutPickupRecordServiceImpl extends ServiceImpl<TakeoutPickupRec
         // 发送消息
         AddMessageDto addMessageDto = new AddMessageDto();
         addMessageDto.setType(MessageType.TAKEOUT.getId());
-        addMessageDto.setContent("您的外卖已取走，请确认是本人操作，如有异常请联系管理员");
+        MessageContent<?> messageContent = new MessageContent<>();
+        messageContent.setNotify("您的外卖已取走，请确认是本人操作，如有异常请联系管理员");
+        addMessageDto.setContent(JSON.toJSONString(messageContent));
         addMessageDto.setReceiveUser(takeoutsOrder.getUserId());
         boolean sendMessageResult = messageService.addMessage(addMessageDto);
         if (sendMessageResult) {

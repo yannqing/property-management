@@ -1,5 +1,6 @@
 package com.qcx.property.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -10,6 +11,7 @@ import com.qcx.property.domain.dto.message.AddMessageDto;
 import com.qcx.property.domain.entity.ActivityRegistration;
 import com.qcx.property.domain.entity.CommunityActivity;
 import com.qcx.property.domain.entity.User;
+import com.qcx.property.domain.model.MessageContent;
 import com.qcx.property.domain.vo.communityActivity.ActivityRegistrationVo;
 import com.qcx.property.domain.vo.communityActivity.CommunityActivityVo;
 import com.qcx.property.domain.vo.user.UserVo;
@@ -150,7 +152,11 @@ public class ActivityRegistrationServiceImpl extends ServiceImpl<ActivityRegistr
         // 发送通知
         AddMessageDto addMessageDto = new AddMessageDto();
         addMessageDto.setType(MessageType.COMMUNITY_ACTIVITY.getId());
-        addMessageDto.setContent("您已成功报名" + communityActivity.getTitle() + "活动，请准时参加");
+
+        MessageContent<CommunityActivity> addMessageContent = new MessageContent<>();
+        addMessageContent.setData(communityActivity);
+        addMessageContent.setNotify("您已成功报名" + communityActivity.getTitle() + "活动，请准时参加");
+        addMessageDto.setContent(JSON.toJSONString(addMessageContent));
         addMessageDto.setReceiveUser(registerUser.getUserId());
         boolean sendMessageResult = messageService.addMessage(addMessageDto);
         if (sendMessageResult) {

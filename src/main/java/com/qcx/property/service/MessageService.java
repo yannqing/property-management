@@ -3,13 +3,17 @@ package com.qcx.property.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qcx.property.domain.dto.message.AddMessageDto;
+import com.qcx.property.domain.dto.message.QueryApprovalDto;
 import com.qcx.property.domain.dto.message.QueryMessageDto;
 import com.qcx.property.domain.dto.message.UpdateMessageDto;
 import com.qcx.property.domain.entity.Message;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qcx.property.domain.model.ApprovalModel;
 import com.qcx.property.domain.model.PageRequest;
 import com.qcx.property.domain.vo.message.MessageVo;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 /**
 * @author 67121
@@ -68,4 +72,6 @@ public interface MessageService extends IService<Message> {
      * @return 返回修改结果
      */
     boolean readMessage(Integer id);
+
+    Page<ApprovalModel> getApprovals(QueryApprovalDto queryApprovalDto);
 }

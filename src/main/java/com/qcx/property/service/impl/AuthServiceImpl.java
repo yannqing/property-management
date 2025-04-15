@@ -1,9 +1,12 @@
 package com.qcx.property.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.qcx.property.common.MessageStatus;
 import com.qcx.property.domain.dto.auth.RegisterDto;
 import com.qcx.property.domain.dto.message.AddMessageDto;
+import com.qcx.property.domain.dto.message.UpdateMessageDto;
 import com.qcx.property.domain.entity.Message;
 import com.qcx.property.domain.entity.Room;
 import com.qcx.property.domain.entity.User;
@@ -126,7 +129,9 @@ public class AuthServiceImpl implements AuthService {
                 // 信息通知
                 AddMessageDto addMessageDto = new AddMessageDto();
                 addMessageDto.setType(MessageType.SYSTEM.getId());
-                addMessageDto.setContent("恭喜您成为租客，欢迎您首次登录系统！");
+                MessageContent<?> messageContent = new MessageContent<>();
+                messageContent.setNotify("恭喜您成为租客，欢迎您首次登录系统！");
+                addMessageDto.setContent(JSON.toJSONString(messageContent));
                 addMessageDto.setReceiveUser(registerUser.getUserId());
 
                 messageService.addMessage(addMessageDto);
@@ -154,9 +159,9 @@ public class AuthServiceImpl implements AuthService {
 
         // 获取消息内容
         String content = message.getContent();
-        MessageContent messageContent = JSON.parseObject(content, MessageContent.class);
+        MessageContent<User> messageContent = JSON.parseObject(content, new TypeReference<>(){});
         RoomModel roomModel = messageContent.getRoomModel();
-        User registerUser = (User) messageContent.getData();
+        User registerUser = messageContent.getData();
         if (isPass) {
             // 注册 + 新增角色
             userMapper.insert(registerUser);
@@ -169,13 +174,28 @@ public class AuthServiceImpl implements AuthService {
             // 信息通知
             AddMessageDto addMessageDto = new AddMessageDto();
             addMessageDto.setType(MessageType.SYSTEM.getId());
-            addMessageDto.setContent("恭喜您成为业主，欢迎您首次登录系统！");
+            MessageContent<?> addMessageContent = new MessageContent<>();
+            addMessageContent.setNotify("恭喜您成为业主，欢迎您首次登录系统！");
+            addMessageDto.setContent(JSON.toJSONString(addMessageContent));
             addMessageDto.setReceiveUser(registerUser.getUserId());
 
             messageService.addMessage(addMessageDto);
-            // TODO 信息通知
+
+            // 修改消息状态
+            UpdateMessageDto updateMessageDto = new UpdateMessageDto();
+            updateMessageDto.setId(id);
+            updateMessageDto.setStatus(MessageStatus.PASSED);
+            messageService.updateMessage(updateMessageDto);
+            // TODO 短信通知
         } else {
-            // TODO 信息通知
+            // 拒绝审批
+            // 修改消息状态
+            UpdateMessageDto updateMessageDto = new UpdateMessageDto();
+            updateMessageDto.setId(id);
+            updateMessageDto.setStatus(MessageStatus.REFUSED);
+            messageService.updateMessage(updateMessageDto);
+
+            // TODO 短信通知
         }
 
 

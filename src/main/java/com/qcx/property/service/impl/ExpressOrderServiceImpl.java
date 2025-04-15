@@ -1,5 +1,6 @@
 package com.qcx.property.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -10,9 +11,11 @@ import com.qcx.property.domain.dto.ExpressOrder.QueryExpressOrderDto;
 import com.qcx.property.domain.dto.ExpressOrder.UpdateExpressOrderDto;
 import com.qcx.property.domain.dto.message.AddMessageDto;
 import com.qcx.property.domain.dto.message.UpdateMessageDto;
+import com.qcx.property.domain.entity.CommunityActivity;
 import com.qcx.property.domain.entity.ExpressOrder;
 import com.qcx.property.domain.entity.Message;
 import com.qcx.property.domain.entity.User;
+import com.qcx.property.domain.model.MessageContent;
 import com.qcx.property.domain.model.PageRequest;
 import com.qcx.property.domain.vo.ExpressOrder.ExpressOrderAdminVo;
 import com.qcx.property.domain.vo.ExpressOrder.ExpressOrderVo;
@@ -159,8 +162,10 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         // TODO 发送消息通知
         AddMessageDto addMessageDto = new AddMessageDto();
         addMessageDto.setType(MessageType.EXPRESS.getId());
-        addMessageDto.setContent("您有新的快递订单，请核实");
-        addMessageDto.setReceiveUser(Integer.valueOf(addExpressOrderDto.getUserId()));
+        MessageContent<?> addMessageContent = new MessageContent<>();
+        addMessageContent.setNotify("您有新的快递订单，请核实");
+        addMessageDto.setContent(JSON.toJSONString(addMessageContent));
+        addMessageDto.setReceiveUser(addExpressOrderDto.getUserId());
 
 
         return saveResult;
@@ -227,7 +232,9 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         // 发送消息通知订单用户，快递已经被取件
         AddMessageDto addMessageDto = new AddMessageDto();
         addMessageDto.setType(MessageType.EXPRESS.getId());
-        addMessageDto.setContent("您的快递被取走，请确认");
+        MessageContent<?> addMessageContent = new MessageContent<>();
+        addMessageContent.setNotify("您的快递被取走，请确认");
+        addMessageDto.setContent(JSON.toJSONString(addMessageContent));
         addMessageDto.setReceiveUser(pickupedExpressOrder.getUserId());
         addMessageDto.setStatus(0);
 
@@ -272,7 +279,9 @@ public class ExpressOrderServiceImpl extends ServiceImpl<ExpressOrderMapper, Exp
         // 发送通知
         AddMessageDto addMessageDto = new AddMessageDto();
         addMessageDto.setType(MessageType.EXPRESS.getId());
-        addMessageDto.setContent("您的快递已确认领取，请注意！");
+        MessageContent<?> addMessageContent = new MessageContent<>();
+        addMessageContent.setNotify("您的快递已确认领取，请注意！");
+        addMessageDto.setContent(JSON.toJSONString(addMessageContent));
         addMessageDto.setReceiveUser(loginUser.getUserId());
 
         boolean sendMessageResult = messageService.addMessage(addMessageDto);
