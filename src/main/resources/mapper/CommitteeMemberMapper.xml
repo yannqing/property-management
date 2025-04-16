@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qcx.property.mapper.CommitteeMemberMapper">
+
+    <resultMap id="BaseResultMap" type="com.qcx.property.domain.entity.CommitteeMember">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="committeeId" column="committee_id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="position" column="position" jdbcType="VARCHAR"/>
+        <result property="joinDate" column="join_date" jdbcType="DATE"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="responsibilities" column="responsibilities" jdbcType="VARCHAR"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,committee_id,user_id,position,
+        join_date,status,responsibilities,
+        createTime,updateTime,isDelete
+    </sql>
+</mapper> 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qcx.property.mapper.CommitteeMeetingMapper">
+
+    <resultMap id="BaseResultMap" type="com.qcx.property.domain.entity.CommitteeMeeting">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="committeeId" column="committee_id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="meetingDate" column="meeting_date" jdbcType="TIMESTAMP"/>
+        <result property="location" column="location" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="organizerId" column="organizer_id" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="attendees" column="attendees" jdbcType="VARCHAR"/>
+        <result property="minutes" column="minutes" jdbcType="VARCHAR"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,committee_id,title,meeting_date,
+        location,content,organizer_id,status,
+        attendees,minutes,createTime,updateTime,isDelete
+    </sql>
+</mapper> 

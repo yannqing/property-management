@@ -64,7 +64,7 @@ public class RoomController {
     @AuthCheck(code = "ROOM_UPDATE")
     @PutMapping
     @Operation(summary = "更新房间")
-    public BaseResponse<?> updateRoom(UpdateRoomDto updateRoomDto) {
+    public BaseResponse<?> updateRoom(@RequestBody UpdateRoomDto updateRoomDto) {
         boolean result = roomService.updateRoom(updateRoomDto);
         if (result) {
             return ResultUtils.success(Code.SUCCESS, null, "修改房间成功！");

@@ -12,6 +12,9 @@ public enum ErrorType implements BaseExceptionInterface {
     ARGS_NOT_NULL(50001, "参数不能为空，请重试！"),
     SYSTEM_ERROR(50000, "系统错误"),
     SYSTEM_USER_ERROR(50002, "系统用户无法修改，请重试"),
+    ALREADY_EXISTS(50003, "资源已存在，请重试！"),
+    NOT_FOUND(50004, "资源不存在，请重试！"),
+    OPERATION_FAILED(50005, "操作失败，请重试！"),
 
     // 认证异常
     USERNAME_ALREADY_EXIST(60001, "用户名已存在，请重试！"),
@@ -74,7 +77,15 @@ public enum ErrorType implements BaseExceptionInterface {
     ACTIVITY_REGISTRATION_ACTIVITY_ID_NOT_NULL(60026, "活动id不能为空，请重试"),
     ACTIVITY_REGISTRATION_USER_ID_NOT_NULL(60027, "参赛用户id不能为空，请重试"),
 
-
+    // 业主委员会相关异常
+    OWNERS_COMMITTEE_NOT_EXIST(60050, "业主委员会不存在，请重试"),
+    OWNERS_COMMITTEE_NAME_EXIST(60051, "业主委员会名称已存在，请重试"),
+    COMMITTEE_MEMBER_NOT_EXIST(60052, "委员会成员不存在，请重试"),
+    COMMITTEE_MEMBER_ALREADY_EXIST(60053, "该用户已是委员会成员，请重试"),
+    COMMITTEE_MEETING_NOT_EXIST(60054, "委员会会议不存在，请重试"),
+    COMMITTEE_MEETING_TITLE_NOT_NULL(60055, "会议标题不能为空，请重试"),
+    COMMITTEE_MEETING_CANNOT_CANCEL(60056, "会议已召开，无法取消"),
+    COMMITTEE_MEETING_CONFLICT(60057, "该时间段已有其他会议，请选择其他时间"),
 
     //token 异常
     TOKEN_NOT_EXIST(60101, "token 不存在"),

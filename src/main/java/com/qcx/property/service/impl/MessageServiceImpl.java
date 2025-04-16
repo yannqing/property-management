@@ -84,10 +84,11 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         }
 
         // 查询所有信息
-        List<Message> allMessageInfo = this.baseMapper.selectList(new QueryWrapper<Message>().eq("receiveUser", loginUser.getUserId()));
+        Page<Message> allMessageInfo = this.page(new Page<>(pageRequest.getCurrent(), pageRequest.getPageSize()), new QueryWrapper<Message>().eq("receiveUser", loginUser.getUserId()));
+
 
         // 二次封装
-        List<MessageVo> messageVoList = allMessageInfo.stream().map(message -> {
+        List<MessageVo> messageVoList = allMessageInfo.getRecords().stream().map(message -> {
             MessageVo messageVo = MessageVo.objToVo(message);
             messageVo.setSendUser(UserVo.objToVo(userMapper.selectById(message.getSendUser())));
             messageVo.setReceiveUser(UserVo.objToVo(userMapper.selectById(message.getReceiveUser())));
@@ -97,7 +98,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         }).toList();
         log.info("查询所有消息通知(个人)");
 
-        return new Page<MessageVo>(pageRequest.getCurrent(), pageRequest.getPageSize()).setRecords(messageVoList);
+        return new Page<MessageVo>(pageRequest.getCurrent(), pageRequest.getPageSize(), allMessageInfo.getTotal()).setRecords(messageVoList);
     }
 
     @Override
@@ -207,7 +208,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         List<Message> messages = this.getBaseMapper().selectList(queryWrapper);
         List<ApprovalModel> approvalModels = new ArrayList<>();
 
-        if (!nickname.isEmpty() || !username.isEmpty()) {
+        if ((nickname != null && !nickname.isEmpty()) || (username != null && !username.isEmpty())) {
             messages.forEach(message -> {
                 String content = message.getContent();
                 if (content != null && !content.isEmpty()) {
