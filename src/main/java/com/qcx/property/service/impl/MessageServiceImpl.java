@@ -223,6 +223,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
                             approvalModel.setUser(user);
                             approvalModel.setRoomModel(messageContent.getRoomModel());
                             approvalModel.setNotify(messageContent.getNotify());
+                            approvalModel.setStatus(message.getStatus());
                             approvalModels.add(approvalModel);
                         }
                     }

@@ -18,4 +18,5 @@ public class ApprovalModel implements Serializable {
     private User user;
     private String notify;
     private RoomModel roomModel;
+    private Integer status;
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qcx.property.mapper.CleaningAppointmentMapper">
+
+    <resultMap id="BaseResultMap" type="com.qcx.property.domain.entity.CleaningAppointment">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="serviceId" column="serviceId" jdbcType="INTEGER"/>
+            <result property="userId" column="userId" jdbcType="INTEGER"/>
+            <result property="appointmentTime" column="appointmentTime" jdbcType="TIMESTAMP"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="contactName" column="contactName" jdbcType="VARCHAR"/>
+            <result property="contactPhone" column="contactPhone" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="remarks" column="remarks" jdbcType="VARCHAR"/>
+            <result property="paymentMethod" column="paymentMethod" jdbcType="TINYINT"/>
+            <result property="paymentStatus" column="paymentStatus" jdbcType="TINYINT"/>
+            <result property="totalAmount" column="totalAmount" jdbcType="DECIMAL"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,serviceId,userId,appointmentTime,
+        address,contactName,contactPhone,status,
+        remarks,paymentMethod,paymentStatus,totalAmount,
+        createTime,updateTime,isDelete
+    </sql>
+</mapper> 
